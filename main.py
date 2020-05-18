@@ -16,7 +16,7 @@ async def stop_command(ctx):
 @bot.command(name='dato', aliases = ['fact'])
 async def dato_command(ctx):
     await ctx.channel.send(getFact())
-@bot.command(name='datoadd', aliases = ['adddato', 'addfact'])
+@bot.command(name='datoadd', aliases = ['adddato', 'addfact', 'añadirdato'])
 async def datoadd_command(ctx,*,arg1):
     try:    
         addFact(arg1)
@@ -25,4 +25,4 @@ async def datoadd_command(ctx,*,arg1):
         await ctx.channel.send('Ha ocurrido un error al añadir tu dato')
 
 
-bot.run('NzAyMDk3MzgxMTg5MDkxNDE5.XsK3GA.IdC8JTZ3N5AbqJrAmVM8u70x2BE')
+bot.run('{0}'.format(sys.argv[0]))
