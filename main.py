@@ -13,10 +13,10 @@ async def hello_command(ctx):
 @bot.command(name='stop')
 async def stop_command(ctx):
     await bot.close()
-@bot.command(name='dato')
+@bot.command(name='dato', aliases = ['fact'])
 async def dato_command(ctx):
     await ctx.channel.send(getFact())
-@bot.command(name='datoadd')
+@bot.command(name='datoadd', aliases = ['adddato', 'addfact'])
 async def datoadd_command(ctx,*,arg1):
     try:    
         addFact(arg1)
