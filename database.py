@@ -11,4 +11,5 @@ print(result[random.randint(0,len(result))])
 def getFact():
     cursor.execute("SELECT * FROM datos")
     result = cursor.fetchall()
-    return str(result[random.randint(0,len(result))])
+    fact = str(result[random.randint(0,len(result))])[1:-2]
+    return fact
