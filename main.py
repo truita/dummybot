@@ -1,5 +1,5 @@
 from discord.ext import commands
-from database import getFacts
+from database import getFact
 import sys
 
 bot = commands.Bot(command_prefix='--',help_command=None)
@@ -15,7 +15,7 @@ async def stop_command(ctx):
     await bot.close()
 @bot.command(name='dato')
 async def dato_command(ctx):
-    await ctx.channel.send(getFacts())
+    await ctx.channel.send(getFact())
 
 
 bot.run('NzAyMDk3MzgxMTg5MDkxNDE5.XsK3GA.IdC8JTZ3N5AbqJrAmVM8u70x2BE')

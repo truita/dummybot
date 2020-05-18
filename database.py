@@ -8,7 +8,7 @@ cursor.execute("SELECT * FROM datos")
 result = cursor.fetchall()
 print(result[random.randint(0,len(result))])
 
-def getFacts():
+def getFact():
     cursor.execute("SELECT * FROM datos")
     result = cursor.fetchall()
-    return result[random.randint(0,len(result))]
+    return str(result[random.randint(0,len(result))])
