@@ -12,4 +12,5 @@ def getFact():
 
 def addFact(arg):
     cursor.execute("INSERT INTO datos(dato) VALUES('{0}')".format(arg))
+    cursor.commit()
     return 
