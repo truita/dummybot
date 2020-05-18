@@ -3,6 +3,7 @@ from database import getFact,addFact
 import sys
 
 bot = commands.Bot(command_prefix='--',help_command=None)
+token = str(input('Input token: '))
 
 @bot.event
 async def on_ready():
@@ -25,4 +26,4 @@ async def datoadd_command(ctx,*,arg1):
         await ctx.channel.send('Ha ocurrido un error al añadir tu dato')
 
 
-bot.run('{0}'.format(sys.argv[0]))
+bot.run(token)
