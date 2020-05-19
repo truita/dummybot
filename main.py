@@ -10,6 +10,9 @@ token = str(input('Input token: '))
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
 
+@bot.event
+async def on_member_join(member):
+    print('{0} se ha unido'.format(member))
 
 @bot.command(name='ping')
 async def hello_command(ctx):
