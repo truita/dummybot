@@ -13,4 +13,9 @@ def getFact():
 def addFact(arg):
     cursor.execute("INSERT INTO datos(dato) VALUES('{0}')".format(arg))
     connection.commit()
-    return 
+    return
+
+def saveRoles(id,roles):
+    cursor.execute("""INSERT INTO savedroles(id,roles) VALUES('{0}',"{1}")""".format(id,roles))
+    connection.commit()
+    return
