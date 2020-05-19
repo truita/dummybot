@@ -1,6 +1,5 @@
 from discord.ext import commands
 from database import getFact,addFact
-import sys
 
 bot = commands.Bot(command_prefix='--',help_command=None)
 token = str(input('Input token: '))
