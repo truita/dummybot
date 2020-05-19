@@ -1,5 +1,5 @@
 from discord.ext import commands
-from database import getFact, addFact, saveRoles
+from database import getFact, addFact, saveRoles, getRoles
 from russian_roulette import reload_function, pew_function
 
 bot = commands.Bot(command_prefix='--', help_command=None)
@@ -12,11 +12,12 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    print('{0} se ha unido'.format(member))
+    getRoles(member.id)
 
 @bot.command(name='ping')
 async def hello_command(ctx):
     await ctx.channel.send('pong')
+    await ctx.channel.send(getRoles(ctx.message.author.id))
 
 
 @bot.command(name='stop')
@@ -47,8 +48,7 @@ async def reload_command(ctx):
 @bot.command(name='pew')
 async def pew_command(ctx):
     if pew_function():
-        saveRoles(ctx.message.author.id, ctx.guild.get_member(
-            ctx.message.author.id).roles)
+        saveRoles(ctx)
         await ctx.channel.send('**PEW**')
         await ctx.guild.get_member(ctx.message.author.id).kick()
     else:
@@ -57,8 +57,7 @@ async def pew_command(ctx):
 
 @bot.command(name='suicide')
 async def suicide_command(ctx):
-    saveRoles(ctx.message.author.id, ctx.guild.get_member(
-        ctx.message.author.id).roles)
+    saveRoles(ctx)
     await ctx.channel.send('<@{0}> decidió que seguir viviendo no valía la pena'.format(ctx.message.author.id))
     await ctx.guild.get_member(ctx.message.author.id).kick()
 
