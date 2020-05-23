@@ -12,12 +12,14 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    getRoles(member.id)
+    role_list = getRoles(member.id)
+    await member.add_roles(role_list)
 
 @bot.command(name='ping')
 async def hello_command(ctx):
     await ctx.channel.send('pong')
     await ctx.channel.send(getRoles(ctx.message.author.id))
+    await ctx.guild.get_member(ctx.message.author.id).add_roles(getRoles(member.id))
 
 
 @bot.command(name='stop')

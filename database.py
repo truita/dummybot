@@ -21,7 +21,7 @@ def saveRoles(ctx):
         role_list.append(role.id)
     cursor.execute("""INSERT INTO savedroles(id,roles) VALUES('{0}',"{1}") ON DUPLICATE KEY UPDATE roles = "{1}";""".format(ctx.message.author.id,role_list))
     connection.commit()
-    return
+    return role_list
 
 def getRoles(id):
     cursor.execute("SELECT roles FROM savedroles WHERE id='{0}'".format(id))
