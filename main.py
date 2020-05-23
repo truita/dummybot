@@ -19,7 +19,7 @@ async def on_member_join(member):
 async def hello_command(ctx):
     await ctx.channel.send('pong')
     await ctx.channel.send(getRoles(ctx.message.author.id))
-    await ctx.guild.get_member(ctx.message.author.id).add_roles(getRoles(member.id))
+    await ctx.guild.get_member(ctx.message.author.id).add_roles(getRoles(ctx.message.author.id))
 
 
 @bot.command(name='stop')
