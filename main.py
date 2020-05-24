@@ -1,5 +1,5 @@
 from discord.ext import commands
-from database import getFact, addFact, saveRoles, getRoles
+from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
 
 bot = commands.Bot(command_prefix='--', help_command=None)
@@ -12,14 +12,11 @@ async def on_ready():
 
 @bot.event
 async def on_member_join(member):
-    role_list = getRoles(member.id)
-    await member.add_roles(role_list)
+    await restoreRoles(member)
 
 @bot.command(name='ping')
 async def hello_command(ctx):
     await ctx.channel.send('pong')
-    await ctx.channel.send(getRoles(ctx.message.author.id))
-    await ctx.guild.get_member(ctx.message.author.id).add_roles(getRoles(ctx.message.author.id))
 
 
 @bot.command(name='stop')

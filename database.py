@@ -25,5 +25,11 @@ def saveRoles(ctx):
 
 def getRoles(id):
     cursor.execute("SELECT roles FROM savedroles WHERE id='{0}'".format(id))
-    result = cursor.fetchall()
+    result = cursor.fetchone()[0].decode('utf-8').strip("][").split(', ')
     return result
+
+async def restoreRoles(member):
+    role_list = getRoles(member.id)
+    for role in role_list[1:]:
+        resolved_role = member.guild.get_role(int(role))
+        await member.add_roles(resolved_role)
