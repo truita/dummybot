@@ -21,7 +21,7 @@ def resetpole():
     fail_maker = None
 
 
-def pole(ctx):
+async def pole(ctx):
     global pole_ready
     global pole_maker
     if not pole_ready:
