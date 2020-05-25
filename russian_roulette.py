@@ -13,7 +13,9 @@ def reload_function():
 def pew_function():
     global magazine_position
     global magazine
-    if magazine[magazine_position] == 1:
+    if 1 not in magazine:
+        return 2
+    elif magazine[magazine_position] == 1:
         return 1
     else:
         magazine_position += 1

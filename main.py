@@ -46,7 +46,9 @@ async def reload_command(ctx):
 
 @bot.command(name='pew')
 async def pew_command(ctx):
-    if pew_function():
+    if pew_function() == 2:
+        await ctx.channel.send('Recarga antes de disparar!')
+    elif pew_function() == 1:
         saveRoles(ctx)
         await ctx.channel.send('**PEW**')
         await ctx.guild.get_member(ctx.message.author.id).kick()
