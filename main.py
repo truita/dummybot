@@ -1,10 +1,13 @@
 from discord.ext import commands
 from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
+from pole import savePole,saveSubpole,saveFail,resetpole
+import schedule
 
-bot = commands.Bot(command_prefix='--', help_command=None)
+bot = commands.Bot(command_prefix='.', help_command=None)
 token = str(input('Input token: '))
 
+schedule.every().day.at("00:00").do(resetpole())
 
 @bot.event
 async def on_ready():
