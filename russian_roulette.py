@@ -16,6 +16,7 @@ def pew_function():
     if 1 not in magazine:
         return 2
     elif magazine[magazine_position] == 1:
+        magazine = [0] * 6
         return 1
     else:
         magazine_position += 1
