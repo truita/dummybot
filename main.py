@@ -66,4 +66,8 @@ async def suicide_command(ctx):
     await ctx.channel.send('<@{0}> decidió que seguir viviendo no valía la pena'.format(ctx.message.author.id))
     await ctx.guild.get_member(ctx.message.author.id).kick()
 
+@bot.command(name='pole', aliases=['Pole'])
+async def pole_command(ctx):
+    savePole(ctx)
+
 bot.run(token)
