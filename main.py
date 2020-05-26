@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands, tasks
 from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
@@ -34,7 +35,7 @@ async def on_member_join(member):
     await restoreRoles(member)
 
 @bot.command(name='ping')
-async def ping_command(ctx):
+async def ping_command(ctx:commands.Context):
     await ctx.channel.send('pong')
 
 @bot.command(name='version')
@@ -75,6 +76,7 @@ async def pew_command(ctx):
         saveRoles(ctx)
         await ctx.channel.send('**PEW**')
         await ctx.message.author.kick()
+        await ctx.message.author.send(await ctx.channel.create_invite(max_uses=1))
     else:
         await ctx.channel.send('*click*')
 
