@@ -1,3 +1,4 @@
+import discord
 from database import savePole,saveSubpole,saveFail,getRanking
 
 pole_ready = False
@@ -80,8 +81,9 @@ async def fail(ctx):
         return
 
 async def ranking(ctx):
-    await ctx.channel.send(
-""":checkered_flag: :top: **RANKING GLOBAL** :top: :checkered_flag:
+    embed = discord.Embed(
+        colour = discord.Colour.blue(),
+        description = """:checkered_flag: :top: **RANKING GLOBAL** :top: :checkered_flag:
 ----------------------------------------
 :one: <@{0[0][0][0]}> => {0[0][0][1]}
 :two: <@{0[0][1][0]}> => {0[0][1][1]}
@@ -104,3 +106,4 @@ async def ranking(ctx):
 <@{0[3][0][0]}> => {0[3][0][1]}
 <@{0[3][1][0]}> => {0[3][1][1]}
 <@{0[3][2][0]}> => {0[3][2][1]}""".format(getRanking()))
+    await ctx.channel.send(embed=embed)
