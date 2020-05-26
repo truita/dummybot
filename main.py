@@ -1,13 +1,29 @@
-from discord.ext import commands
+from discord.ext import commands, tasks
 from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
-from pole import savePole,saveSubpole,saveFail,resetpole
-import schedule
+from pole import pole, subpole, fail, resetpole
+from datetime import datetime, timedelta
+import schedule,asyncio
 
 bot = commands.Bot(command_prefix='.', help_command=None)
 token = str(input('Input token: '))
 
-schedule.every().day.at("00:00").do(resetpole())
+@tasks.loop(hours=24)
+async def pole_schedule():
+    resetpole()
+
+@pole_schedule.before_loop
+async def before_pole_schedule():
+    hour = 12 
+    minute = 10
+    await bot.wait_until_ready()
+    now = datetime.now()
+    future = datetime(now.year, now.month, now.day, hour, minute)
+    if now.hour >= hour and now.minute > minute:
+        future += timedelta(days=1)
+    await asyncio.sleep((future - now).total_seconds())
+
+pole_schedule.start()
 
 @bot.event
 async def on_ready():
@@ -55,7 +71,7 @@ async def pew_command(ctx):
     elif pew_result == 1:
         saveRoles(ctx)
         await ctx.channel.send('**PEW**')
-        await ctx.guild.get_member(ctx.message.author.id).kick()
+        await ctx.message.author.kick()
     else:
         await ctx.channel.send('*click*')
 
@@ -64,10 +80,18 @@ async def pew_command(ctx):
 async def suicide_command(ctx):
     saveRoles(ctx)
     await ctx.channel.send('<@{0}> decidió que seguir viviendo no valía la pena'.format(ctx.message.author.id))
-    await ctx.guild.get_member(ctx.message.author.id).kick()
+    await ctx.message.author.kick()
 
 @bot.command(name='pole', aliases=['Pole'])
 async def pole_command(ctx):
-    savePole(ctx)
+    await pole(ctx)
+
+@bot.command(name='subpole', aliases=['Subpole'])
+async def subpole_command(ctx):
+    await subpole(ctx)
+
+@bot.command(name='fail', aliases=['Fail'])
+async def fail_command(ctx):
+    await fail(ctx)
 
 bot.run(token)
