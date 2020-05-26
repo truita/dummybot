@@ -36,7 +36,6 @@ async def on_member_join(member):
 @bot.command(name='ping')
 async def ping_command(ctx):
     await ctx.channel.send('pong')
-    await ranking(ctx)
 
 
 @bot.command(name='stop')
@@ -95,4 +94,7 @@ async def subpole_command(ctx):
 async def fail_command(ctx):
     await fail(ctx)
 
+@bot.command(name='ranking')
+async def ranking_command(ctx):
+    await ranking(ctx)
 bot.run(token)
