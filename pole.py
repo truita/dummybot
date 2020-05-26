@@ -81,18 +81,18 @@ async def fail(ctx):
 
 async def ranking(ctx):
     await ctx.channel.send("""TOTAL\n
-          :first_place: <@{0[0][0][0]}> con {0[0][0][1]} puntos\n
-          :second_place: <@{0[0][1][0]}> con {0[0][1][1]} puntos\n
-          :third_place: <@{0[0][2][0]}> con {0[0][2][1]} puntos\n
-          POLE\n
-          :first_place: <@{0[1][0][0]}> con {0[1][0][1]} poles\n
-          :second_place: <@{0[1][1][0]}> con {0[1][1][1]} poles\n
-          :third_place: <@{0[1][2][0]}> con {0[1][2][1]} poles\n
-          SUBPOLE\n +
-          :first_place: <@{0[2][0][0]}> con {0[2][0][1]} subpoles\n
-          :second_place: <@{0[2][1][0]}> con {0[2][1][1]} subpoles\n
-          :third_place: <@{0[2][2][0]}> con {0[2][2][1]} subpoles\n
-          FAIL\n +
-          :first_place: <@{0[3][0][0]}> con {0[3][0][1]} fails\n
-          :second_place: <@{0[3][1][0]}> con {0[3][1][1]} fails\n
-          :third_place: <@{0[3][2][0]}> con {0[3][2][1]} fails\n""".format(getRanking()))
+          :first_place: <@{0[0][0][0]}> con {0[0][0][1]} puntos
+          :second_place: <@{0[0][1][0]}> con {0[0][1][1]} puntos
+          :third_place: <@{0[0][2][0]}> con {0[0][2][1]} puntos
+          POLE
+          :first_place: <@{0[1][0][0]}> con {0[1][0][1]} poles
+          :second_place: <@{0[1][1][0]}> con {0[1][1][1]} poles
+          :third_place: <@{0[1][2][0]}> con {0[1][2][1]} poles
+          SUBPOLE
+          :first_place: <@{0[2][0][0]}> con {0[2][0][1]} subpoles
+          :second_place: <@{0[2][1][0]}> con {0[2][1][1]} subpoles
+          :third_place: <@{0[2][2][0]}> con {0[2][2][1]} subpoles
+          FAIL
+          :first_place: <@{0[3][0][0]}> con {0[3][0][1]} fails
+          :second_place: <@{0[3][1][0]}> con {0[3][1][1]} fails
+          :third_place: <@{0[3][2][0]}> con {0[3][2][1]} fails""".format(getRanking()))
