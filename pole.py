@@ -81,21 +81,26 @@ async def fail(ctx):
 
 async def ranking(ctx):
     await ctx.channel.send(
-"""RANKING
+""":checkered_flag: :top: **RANKING GLOBAL** :top: :checkered_flag:
+----------------------------------------
+:one: <@{0[0][0][0]}> => {0[0][0][1]}
+:two: <@{0[0][1][0]}> => {0[0][1][1]}
+:three: <@{0[0][2][0]}> => {0[0][2][1]}
 
-TOTAL
-:first_place: <@{0[0][0][0]}> con {0[0][0][1]} puntos
-:second_place: <@{0[0][1][0]}> con {0[0][1][1]} puntos
-:third_place: <@{0[0][2][0]}> con {0[0][2][1]} puntos
-POLE
-:first_place: <@{0[1][0][0]}> con {0[1][0][1]} poles
-:second_place: <@{0[1][1][0]}> con {0[1][1][1]} poles
-:third_place: <@{0[1][2][0]}> con {0[1][2][1]} poles
-SUBPOLE
-:first_place: <@{0[2][0][0]}> con {0[2][0][1]} subpoles
-:second_place: <@{0[2][1][0]}> con {0[2][1][1]} subpoles
-:third_place: <@{0[2][2][0]}> con {0[2][2][1]} subpoles
-FAIL
-:first_place: <@{0[3][0][0]}> con {0[3][0][1]} fails
-:second_place: <@{0[3][1][0]}> con {0[3][1][1]} fails
-:third_place: <@{0[3][2][0]}> con {0[3][2][1]} fails""".format(getRanking()))
+:checkered_flag: :top: **POLE** :top: :checkered_flag:
+----------------------------------------
+<@{0[1][0][0]}> => {0[1][0][1]}
+<@{0[1][1][0]}> => {0[1][1][1]}
+<@{0[1][2][0]}> => {0[0][2][1]}
+
+:checkered_flag: :two: **SUBPOLE** :two: :checkered_flag:
+----------------------------------------
+<@{0[2][0][0]}> => {0[2][0][1]}
+<@{0[2][1][0]}> => {0[2][1][1]}
+<@{0[2][2][0]}> => {0[2][2][1]}
+
+:checkered_flag: :three: **BRONCE** :three: :checkered_flag:
+----------------------------------------
+<@{0[3][0][0]}> => {0[3][0][1]}
+<@{0[3][1][0]}> => {0[3][1][1]}
+<@{0[3][2][0]}> => {0[3][2][1]}""".format(getRanking()))
