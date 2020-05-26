@@ -1,7 +1,7 @@
 from discord.ext import commands, tasks
 from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
-from pole import pole, subpole, fail, resetpole
+from pole import pole, subpole, fail, resetpole, ranking
 from datetime import datetime, timedelta
 import schedule,asyncio
 
@@ -14,8 +14,8 @@ async def pole_schedule():
 
 @pole_schedule.before_loop
 async def before_pole_schedule():
-    hour = 12 
-    minute = 10
+    hour = 00 
+    minute = 00
     await bot.wait_until_ready()
     now = datetime.now()
     future = datetime(now.year, now.month, now.day, hour, minute)
@@ -34,8 +34,9 @@ async def on_member_join(member):
     await restoreRoles(member)
 
 @bot.command(name='ping')
-async def hello_command(ctx):
+async def ping_command(ctx):
     await ctx.channel.send('pong')
+    await ranking(ctx)
 
 
 @bot.command(name='stop')

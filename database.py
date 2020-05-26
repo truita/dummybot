@@ -2,7 +2,7 @@ import mysql.connector as mysql
 import random
 
 connection = mysql.connect(user="dummybot",host="localhost",database="POLE")
-cursor = connection.cursor()
+cursor = connection.cursor(buffered=True)
 
 def getFact():
     cursor.execute("SELECT * FROM datos")
@@ -51,3 +51,15 @@ def saveFail(id):
     cursor.execute("INSERT INTO contador(id,fail) VALUES({0},1) ON DUPLICATE KEY UPDATE fail = fail + 1".format(id))
     connection.commit()
     return
+
+def getRanking():
+    ranking_matrix = [[[0 for x in range(2)] for y in range(3)] for z in range(4)]
+    cursor.execute("SELECT id,points FROM scores ORDER BY points DESC LIMIT 3;")
+    ranking_matrix[0] = cursor.fetchall()
+    cursor.execute("SELECT id,pole FROM scores ORDER BY pole DESC LIMIT 3;")
+    ranking_matrix[1] = cursor.fetchall()
+    cursor.execute("SELECT id,subpole FROM scores ORDER BY subpole DESC LIMIT 3;")
+    ranking_matrix[2] = cursor.fetchall()
+    cursor.execute("SELECT id,fail FROM scores ORDER BY fail DESC LIMIT 3;")
+    ranking_matrix[3] = cursor.fetchall()
+    return ranking_matrix
