@@ -1,6 +1,6 @@
 from database import savePole,saveSubpole,saveFail
 
-pole_ready = True
+pole_ready = False
 subpole_ready = False
 fail_ready = False
 
@@ -13,9 +13,9 @@ def resetpole():
     global pole_maker,subpole_maker,fail_maker
     global pole_ready,subpole_ready,fail_ready
     
-    pole_ready = False
-    subpole_ready = False
-    fail_ready = False
+    pole_ready = True
+    subpole_ready = True
+    fail_ready = True
 
     pole_maker = None
     subpole_maker = None
