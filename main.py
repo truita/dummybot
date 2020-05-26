@@ -44,7 +44,8 @@ async def version_command(ctx):
 
 @bot.command(name='stop')
 async def stop_command(ctx):
-    await bot.close()
+    if(ctx.message.author == ctx.guild.owner):
+        await bot.close()
 
 
 @bot.command(name='dato', aliases=['fact'])
