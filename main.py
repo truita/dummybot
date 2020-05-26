@@ -76,7 +76,10 @@ async def pew_command(ctx):
     elif pew_result == 1:
         saveRoles(ctx)
         await ctx.channel.send('**PEW**')
-        await ctx.message.author.kick()
+        try:
+            await ctx.message.author.kick()
+        except:
+            await ctx.channel.send('No tengo permisos suficientes!')
         await ctx.message.author.send(await ctx.channel.create_invite(max_uses=1))
     else:
         await ctx.channel.send('*click*')
@@ -86,7 +89,11 @@ async def pew_command(ctx):
 async def suicide_command(ctx):
     saveRoles(ctx)
     await ctx.channel.send('<@{0}> decidió que seguir viviendo no valía la pena'.format(ctx.message.author.id))
-    await ctx.message.author.kick()
+    try:
+        await ctx.message.author.kick()
+    except:
+        await ctx.channel.send('No tengo permisos suficientes!')
+    await ctx.message.author.send(await ctx.channel.create_invite(max_uses=1))
 
 @bot.command(name='pole', aliases=['Pole'])
 async def pole_command(ctx):
