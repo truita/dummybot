@@ -37,6 +37,9 @@ async def on_member_join(member):
 async def ping_command(ctx):
     await ctx.channel.send('pong')
 
+@bot.command(name='version')
+async def version_command(ctx):
+    await ctx.channel.send('dummybot(py) v1.00')
 
 @bot.command(name='stop')
 async def stop_command(ctx):
