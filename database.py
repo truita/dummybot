@@ -35,20 +35,17 @@ async def restoreRoles(member):
         await member.add_roles(resolved_role)
 
 def savePole(id):
-    cursor.execute("INSERT INTO scores(id,points) VALUES({0},4) ON DUPLICATE KEY UPDATE points = points + 4".format(id))
-    cursor.execute("INSERT INTO contador(id,pole) VALUES({0},1) ON DUPLICATE KEY UPDATE pole = pole + 1".format(id))
+    cursor.execute("INSERT INTO scores(id,points,pole) VALUES({0},4,1) ON DUPLICATE KEY UPDATE points = points + 4, pole = pole + 1".format(id))
     connection.commit()
     return
 
 def saveSubpole(id):
-    cursor.execute("INSERT INTO scores(id,points) VALUES({0},2) ON DUPLICATE KEY UPDATE points = points + 2".format(id))
-    cursor.execute("INSERT INTO contador(id,subpole) VALUES({0},1) ON DUPLICATE KEY UPDATE subpole = subpole + 1".format(id))
+    cursor.execute("INSERT INTO scores(id,points,subpole) VALUES({0},2,1) ON DUPLICATE KEY UPDATE points = points + 2, subpole = subpole + 1".format(id))
     connection.commit()
     return
 
 def saveFail(id):
-    cursor.execute("INSERT INTO scores(id,points) VALUES({0},2) ON DUPLICATE KEY UPDATE points = points + 1".format(id))
-    cursor.execute("INSERT INTO contador(id,fail) VALUES({0},1) ON DUPLICATE KEY UPDATE fail = fail + 1".format(id))
+    cursor.execute("INSERT INTO scores(id,points,pole) VALUES({0},1,1) ON DUPLICATE KEY UPDATE points = points + 4, fail = fail + 1".format(id))
     connection.commit()
     return
 
