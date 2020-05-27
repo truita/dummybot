@@ -5,7 +5,7 @@ from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
 from pole import pole, subpole, fail, resetpole, ranking
 from datetime import datetime, timedelta
-import schedule,asyncio
+import asyncio
 
 bot = commands.Bot(command_prefix='.', help_command=None)
 token = str(os.environ['TOKEN'])

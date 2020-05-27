@@ -11,4 +11,4 @@ build:
 run:
    stage: run
    script:
-    - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN dummybot:1.0
+    - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:1.0
