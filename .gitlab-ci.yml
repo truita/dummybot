@@ -14,10 +14,10 @@ test:
     - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:latest
    interruptible: true
    
-deploy:
-  image: kroniak/ssh-client 
+deploy: 
   stage: deploy
   script: 
+    - docker run --network="host" kroniak/ssh-client
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
