@@ -1,0 +1,3 @@
+dummybot:
+  script:
+    - python3 /home/pi/dummybot/main.py
