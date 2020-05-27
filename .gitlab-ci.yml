@@ -3,7 +3,12 @@ image: docker:latest
 services:
   - docker:dind
 
-test:
-  stage: test
+build:
+  stage: build
   script:
-    - docker build -t test .
+    - docker build --tag dummybot:1.0 .
+    
+run:
+   stage: run
+   script:
+    - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN dummybot:1.0
