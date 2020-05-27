@@ -101,7 +101,7 @@ async def poletime_command(ctx:commands.Context):
     future = datetime(now.year, now.month, now.day, 00, 00)
     if now.hour >= 00 and now.minute > 00:
         future += timedelta(days=1)
-    await ctx.channel.send('Queda {0} hasta la siguiente pole'.format(future))
+    await ctx.channel.send('Queda {0} hasta la siguiente pole'.format(future - now))
 
 @bot.command(name='pole', aliases=['Pole'])
 async def pole_command(ctx):
