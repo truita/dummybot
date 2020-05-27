@@ -1,5 +1,0 @@
-image: "python:3.7"
-
-dummybot:
-  script:
-    - python3 /home/pi/dummybot/main.py
