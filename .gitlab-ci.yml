@@ -12,10 +12,10 @@ test:
    stage: test
    script:
     - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:1.0
-   interruptible:true
+   interruptible: true
    
 deploy:
    stage: deploy
    script: 
     - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:1.0
-   when:manual
+   when: manual
