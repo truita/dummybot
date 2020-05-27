@@ -1,17 +1,9 @@
 build:
   stage: build
   script:
-    - git clone https://gitlab.com/salmonmolon/dummybot.git
-    - cd dummybot
-    - docker build --tag dummybot:latest .
-    
-test:
-   stage: test
-   script:
-    - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:latest
-   interruptible: true
-   
+    - docker build --tag dummybot .
+
 deploy: 
   stage: deploy
   script: 
-    - docker run -d -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:latest
+    - docker run -d -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host"
