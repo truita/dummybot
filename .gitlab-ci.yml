@@ -1,8 +1,3 @@
-image: docker:latest
-
-services:
-  - docker:dind
-
 build:
   stage: build
   script:
@@ -17,13 +12,6 @@ test:
 deploy: 
   stage: deploy
   script: 
-    - docker run --network="host" kroniak/ssh-client
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - echo "$SSH_PRIVATE_KEY_STAGING" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh $SSH_HOST 'cd dummybot'
-    - ssh $SSH_HOST 'git pull'
-    - ssh $SSH_HOST 'docker build --tag dummybot:latest .'
-    - ssh $SSH_HOST 'docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:latest'
+    - git clone https://gitlab.com/salmonmolon/dummybot.git
+    - cd dummybot
+    - python3 main.py $DISCORD_ACCESS_TOKEN
