@@ -1,1 +1,1 @@
-discord.py, mysql-connector
+discord.py mysql-connector
