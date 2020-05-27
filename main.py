@@ -1,3 +1,4 @@
+import sys
 import discord
 from discord.ext import commands, tasks
 from database import getFact, addFact, saveRoles, restoreRoles
@@ -7,7 +8,7 @@ from datetime import datetime, timedelta
 import schedule,asyncio
 
 bot = commands.Bot(command_prefix='.', help_command=None)
-token = str(input('Input token: '))
+token = str(sys.argv[1])
 
 @tasks.loop(hours=24)
 async def pole_schedule():
