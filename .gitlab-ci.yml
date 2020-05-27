@@ -17,7 +17,7 @@ test:
 deploy:
   image: kroniak/ssh-client 
   stage: deploy
-   script: 
+  script: 
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
