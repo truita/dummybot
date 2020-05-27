@@ -6,16 +6,24 @@ services:
 build:
   stage: build
   script:
-    - docker build --tag dummybot:1.0 .
+    - docker build --tag dummybot:latest .
     
 test:
    stage: test
    script:
-    - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:1.0
+    - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:latest
    interruptible: true
    
 deploy:
-   stage: deploy
+  image: kroniak/ssh-client 
+  stage: deploy
    script: 
-    - docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:1.0
-   when: manual
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - echo "$SSH_PRIVATE_KEY_STAGING" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh $SSH_HOST 'cd dummybot'
+    - ssh $SSH_HOST 'git pull'
+    - ssh $SSH_HOST 'docker build --tag dummybot:latest .'
+    - ssh $SSH_HOST 'docker run -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host" dummybot:latest'
