@@ -1,14 +1,13 @@
-import os
 import discord
 from discord.ext import commands, tasks
 from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
 from pole import pole, subpole, fail, resetpole, ranking
 from datetime import datetime, timedelta
-import asyncio
+import schedule,asyncio
 
 bot = commands.Bot(command_prefix='.', help_command=None)
-token = str(os.environ['TOKEN'])
+token = str(input('Input token: '))
 
 @tasks.loop(hours=24)
 async def pole_schedule():

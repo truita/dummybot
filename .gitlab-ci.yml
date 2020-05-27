@@ -1,9 +1,0 @@
-build:
-  stage: build
-  script:
-    - docker build --tag dummybot .
-
-deploy: 
-  stage: deploy
-  script: 
-    - docker run -d -e TOKEN=$DISCORD_ACCESS_TOKEN --network="host"
