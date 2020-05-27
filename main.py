@@ -1,13 +1,13 @@
-import discord
+import sys
 from discord.ext import commands, tasks
 from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
 from pole import pole, subpole, fail, resetpole, ranking
 from datetime import datetime, timedelta
-import schedule,asyncio
+import asyncio
 
 bot = commands.Bot(command_prefix='.', help_command=None)
-token = str(input('Input token: '))
+token = str(sys.argv[1])
 
 @tasks.loop(hours=24)
 async def pole_schedule():
@@ -94,6 +94,14 @@ async def suicide_command(ctx):
         await ctx.message.author.kick()
     except:
         await ctx.channel.send('No tengo permisos suficientes!')
+
+@bot.command(name='poletime', aliases=['timepole','nextpole','timeleft'])
+async def poletime_command(ctx:commands.Context):
+    now = datetime.now()
+    future = datetime(now.year, now.month, now.day, 00, 00)
+    if now.hour >= 00 and now.minute > 00:
+        future += timedelta(days=1)
+    await ctx.channel.send('Queda {0} hasta la siguiente pole'.format(future))
 
 @bot.command(name='pole', aliases=['Pole'])
 async def pole_command(ctx):
