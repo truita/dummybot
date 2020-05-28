@@ -59,7 +59,7 @@ def saveSubpole(id):
 
 def saveFail(id):
     cursor = connection.cursor(buffered=True)
-    cursor.execute("INSERT INTO scores(id,points,fail) VALUES({0},1,1) ON DUPLICATE KEY UPDATE points = points + 4, fail = fail + 1".format(id))
+    cursor.execute("INSERT INTO scores(id,points,fail) VALUES({0},1,1) ON DUPLICATE KEY UPDATE points = points + 1, fail = fail + 1".format(id))
     connection.commit()
     cursor.close()
     return
