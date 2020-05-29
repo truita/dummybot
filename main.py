@@ -40,7 +40,7 @@ async def ping_command(ctx:commands.Context):
 
 @bot.command(name='version')
 async def version_command(ctx):
-    await ctx.channel.send('dummybot(py) v1.00')
+    await ctx.channel.send('dummybot(py) v1.00 STABLE')
 
 @bot.command(name='stop')
 async def stop_command(ctx):
