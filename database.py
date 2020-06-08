@@ -1,5 +1,6 @@
 import mysql.connector as mysql
 import random
+import os
 
 def getconnection(): #This function is called whenever it is needed to get a connection to the db
     connection = mysql.connect(user="dummybot",host="localhost",database="POLE") #Connects
@@ -13,6 +14,7 @@ def getFact(): #Used to get a random fact from the db
     connection,cursor = getconnection()
     cursor.execute("SELECT * FROM datos") #Queries all the facts
     result = cursor.fetchall() #Saves the facts to a variable
+    random.seed(os.urandom(50))
     fact = str(result[random.randint(0,len(result) - 1)])[2:-3] #Chooses a fact randomly
     closeconnection(connection,cursor)
     return fact #Returns the fact
