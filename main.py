@@ -134,6 +134,6 @@ async def ranking_command(ctx):
 
 @bot.command(name='google')
 async def google_command(ctx, *, arg1):
-    await ctx.channel.send("https://lmgtfy.com/?q={0}&iie=1".format(arg1.replace(" ", "+")), embed=None)
+    await ctx.channel.send("https://lmgtfy.com/?q={0}".format(arg1.replace(" ", "+")), embed=None)
 
 bot.run(token)
