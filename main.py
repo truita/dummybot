@@ -130,8 +130,10 @@ async def fail_command(ctx):
 @bot.command(name='ranking')
 async def ranking_command(ctx):
     await ranking(ctx)
-bot.run(token)
+
 
 @bot.command(name='google')
 async def google_command(ctx, *, arg1):
     await ctx.channel.send("https://lmgtfy.com/?q={0}&iie=1".format(arg1))
+
+bot.run(token)
