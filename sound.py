@@ -22,12 +22,14 @@ async def leave_channel(ctx:commands.Context):
     await voice_client.disconnect()
 
 async def pass_track(ctx):
+    global track
     ctx.guild.voice_client.source = discord.FFmpegOpusAudio(queue[track])
     track += 1
 
 def download(url, track):
-    youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/{0}.webm'.format(track), 'forcefilename': True}).download([url])
-    filename = "/tmp/dummybot/{0}.webm".format(track)
+    with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/%(id)s.webm'}) as ydl:
+        ydl.download([url])
+        filename = "/tmp/dummybot/{0}.webm".format(ydl.extract_info(url)['id'])
     global queue
     queue.append(filename)
     
