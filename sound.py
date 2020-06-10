@@ -3,7 +3,8 @@ from discord.ext import commands
 import discord
 import os
 
-users = {}
+queue = []
+track = 0
 
 def initialize_voice(bot_argument:commands.Bot):
     global bot
@@ -21,11 +22,24 @@ async def leave_channel(ctx:commands.Context):
     await voice_client.disconnect()
 
 async def play(ctx,url):
+    filename = ""
     guild = ctx.guild
     voice_client = guild.voice_client
-    youtube_dl.YoutubeDL({'format': 'bestaudio/best'}).download([url])
-    for file in os.listdir("./"):
-        if(file.endswith((".weba",".mp3",".webm",))):
-            os.rename(file,"song.mp3")
-    player = await voice_client.play(discord.FFmpegOpusAudio("song.mp3"))
-    users[guild.id] = player
+    with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/%(title)s.webm'}) as ydl:
+        ydl.download([url])
+        nonlocal filename
+        filename = "/tmp/dummybot/{0}.webm".format(ydl.extract_info(url, download=False)['title'])
+        global queue
+        queue.append(filename)
+
+    
+    if not voice_client.is_playing or not voice_client.is_paused:
+        async def pass_track():
+            global track
+            global player
+            track += 1
+            player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]), pass_track())
+
+        global player
+        player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]), pass_track())
+        
