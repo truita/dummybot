@@ -4,7 +4,7 @@ from discord.ext import commands, tasks #The library for a discord bot (along wi
 from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
 from pole import pole, subpole, fail, resetpole, ranking
-from sound import initialize_voice, join_channel, leave_channel
+from sound import initialize_voice, join_channel, leave_channel, play
 #
 from datetime import datetime, timedelta #Needed for scheduling
 import asyncio #Also needed for scheduling
@@ -145,5 +145,9 @@ async def join_command(ctx):
 @bot.command(name='leave')
 async def leave_command(ctx):
     await leave_channel(ctx)
+
+@bot.command(name='play')
+async def play_command(ctx, url):
+    await play(ctx, url)
 
 bot.run(token)

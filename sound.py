@@ -17,3 +17,8 @@ async def leave_channel(ctx:commands.Context):
     guild = ctx.guild
     voice_client = guild.voice_client
     await voice_client.disconnect()
+
+async def play(ctx,url):
+    guild = ctx.guild
+    voice_client = guild.voice_client
+    await voice_client.create_yt_dl_player(url)
