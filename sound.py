@@ -1,7 +1,7 @@
 import youtube_dl
 from discord.ext import commands
 import discord
-import os
+import os, asyncio
 
 queue = []
 track = -1
@@ -23,6 +23,8 @@ async def leave_channel(ctx:commands.Context):
 
 async def pass_track(ctx):
     global track
+    while not queue[track]:
+        asyncio.run(asyncio.sleep(0.5))
     ctx.guild.voice_client.source = discord.FFmpegOpusAudio(queue[track])
     track += 1
 
@@ -41,5 +43,6 @@ async def play(ctx,url):
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
         await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
+        pass_track(ctx)
         
         
