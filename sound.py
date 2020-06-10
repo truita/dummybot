@@ -5,7 +5,6 @@ import os
 
 queue = []
 track = -1
-player = discord.AudioPlayer
 
 def initialize_voice(bot_argument:commands.Bot):
     global bot
