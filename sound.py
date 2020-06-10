@@ -1,5 +1,7 @@
 import youtube_dl
 from discord.ext import commands
+import discord
+import os
 
 users = {}
 
@@ -21,5 +23,9 @@ async def leave_channel(ctx:commands.Context):
 async def play(ctx,url):
     guild = ctx.guild
     voice_client = guild.voice_client
-    player = await voice_client.play(youtube_dl.YoutubeDL().extract_info(url)['formats'][0]['url'])
+    youtube_dl.YoutubeDL({'format': 'bestaudio/best'}).download(url)
+    for file in os.listdir("./"):
+        if(file.endswith([".weba",".mp3",".webm",])):
+            os.rename("song.mp3")
+    player = await voice_client.play(discord.FFmpegOpusAudio("song.mp3"))
     users[guild.id] = player
