@@ -24,9 +24,8 @@ async def leave_channel(ctx:commands.Context):
 async def pass_track(ctx):
     global track
     global player
-    voice_client = ctx.guild.voice_client
-    player.stop()
-    player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
+    track += 1
+    player.source = discord.FFmpegOpusAudio(queue[track])
 
 async def play(ctx,url):
     filename = ""
@@ -43,5 +42,5 @@ async def play(ctx,url):
     if not voice_client.is_playing() or not voice_client.is_paused():
         global player
         player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
-        track += 1
+        
         
