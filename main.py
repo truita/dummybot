@@ -147,7 +147,7 @@ async def leave_command(ctx):
     await leave_channel(ctx)
 
 @bot.command(name='play')
-async def play_command(ctx, url):
-    await play(ctx, url)
+async def play_command(ctx, arg1):
+    await play(ctx, arg1)
 
 bot.run(token)
