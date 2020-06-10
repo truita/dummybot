@@ -12,9 +12,8 @@ async def join_channel(ctx:commands.Context):
         channel = ctx.author.voice.channel
     except:
         await ctx.channel.send("No estás en un canal de voz!")
-    await bot.join_voice_channel(channel)
-
+    await channel.connect()
 async def leave_channel(ctx:commands.Context):
     guild = ctx.guild
-    voice_client = bot.voice_client_in(guild)
+    voice_client = guild.voice_client
     await voice_client.disconnect()
