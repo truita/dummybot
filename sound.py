@@ -26,7 +26,7 @@ async def pass_track(ctx):
     track += 1
 
 def download(url, track):
-    youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/{0}.webm'.format(track)}).download([url])
+    youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/{0}.webm'.format(track), 'forcefilename': True}).download([url])
     filename = "/tmp/dummybot/{0}.webm".format(track)
     global queue
     queue.append(filename)
