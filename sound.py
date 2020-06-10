@@ -26,6 +26,7 @@ async def pass_track(ctx):
     global player
     voice_client = ctx.guild.voice_client
     track += 1
+    player.stop()
     player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
 
 async def play(ctx,url):
