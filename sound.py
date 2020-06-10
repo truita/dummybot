@@ -9,7 +9,7 @@ def initialize_voice(bot_argument:commands.Bot):
 
 async def join_channel(ctx:commands.Context):
     try:
-        channel = ctx.author.voice.voice_channel
+        channel = ctx.author.voice.channel
     except:
         await ctx.channel.send("No estás en un canal de voz!")
     await bot.join_voice_channel(channel)
