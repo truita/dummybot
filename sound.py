@@ -32,7 +32,7 @@ async def play(ctx,url):
         queue.append(filename)
 
     
-    if not voice_client.is_playing or not voice_client.is_paused:
+    if not voice_client.is_playing() or not voice_client.is_paused():
         async def pass_track():
             global track
             global player
