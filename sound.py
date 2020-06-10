@@ -27,7 +27,7 @@ async def play(ctx,url):
     voice_client = guild.voice_client
     with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/%(title)s.webm'}) as ydl:
         ydl.download([url])
-        filename = "/tmp/dummybot/{0}.webm".format(ydl.extract_info(url, download=False)['title'])
+        filename = "/tmp/dummybot/{0}.webm".format(ydl.extract_info("https://www.youtube.com/watch?v=UOxkGD8qRB4", download=False)['title'].replace("/","_").replace("|","_"))
         global queue
         queue.append(filename)
 
