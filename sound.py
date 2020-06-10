@@ -37,8 +37,8 @@ async def play(ctx,url):
             global track
             global player
             track += 1
-            player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]), pass_track())
+            player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]), after = pass_track())
 
         global player
-        player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]), pass_track())
+        player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]), after = pass_track())
         
