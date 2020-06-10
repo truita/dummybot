@@ -30,6 +30,7 @@ async def pass_track(ctx):
 
 async def play(ctx,url):
     filename = ""
+    global track
     guild = ctx.guild
     voice_client = guild.voice_client
     with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/{0}.webm'.format(track)}) as ydl:
@@ -41,7 +42,6 @@ async def play(ctx,url):
     
     if not voice_client.is_playing() or not voice_client.is_paused():
         global player
-        global track
         player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
         track += 1
         
