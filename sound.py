@@ -27,7 +27,7 @@ async def play(ctx,url):
     voice_client = guild.voice_client
     with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/%(title)s.webm'}) as ydl:
         ydl.download([url])
-        filename = "/tmp/dummybot/{0}.webm".format(ydl.extract_info("https://www.youtube.com/watch?v=UOxkGD8qRB4", download=False)['title'].replace("/","_").replace("|","_"))
+        filename = "/tmp/dummybot/{0}.webm".format(ydl.extract_info(url, download=False)['title'].replace("/","_").replace("|","_"))
         global queue
         queue.append(filename)
 
@@ -37,8 +37,8 @@ async def play(ctx,url):
             global track
             global player
             track += 1
-            player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]), after = pass_track())
+            player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
 
         global player
-        player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]), after = pass_track())
+        player = await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
         
