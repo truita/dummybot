@@ -55,7 +55,7 @@ async def play(ctx,url):
         await join_channel(ctx)
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
-        await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
+        voice_client.play(discord.FFmpegOpusAudio(queue[track]))
         print('Music Finished!')
         await pass_track(ctx)
         
