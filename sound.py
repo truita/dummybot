@@ -45,7 +45,11 @@ def download(url, track):
 async def play(ctx,url):
     global track
     track += 1
-    download(url, track)
+    try:
+        download(url, track)
+    except:
+        ctx.channel.send('Error encontrando tu canción')
+        track -= 1
     guild = ctx.guild
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
