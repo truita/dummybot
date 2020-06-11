@@ -25,6 +25,7 @@ async def leave_channel(ctx:commands.Context):
     track = -1
 
 def get_current_context():
+    global current_context
     return current_context
 
 def pass_track(ctx=get_current_context()):
