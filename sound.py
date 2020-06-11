@@ -20,6 +20,9 @@ async def leave_channel(ctx:commands.Context):
     guild = ctx.guild
     voice_client = guild.voice_client
     await voice_client.disconnect()
+    global queue, track
+    queue = []
+    track = -1
 
 async def pass_track(ctx):
     global track
