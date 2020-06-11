@@ -51,6 +51,8 @@ async def play(ctx,url):
         ctx.channel.send('Error encontrando tu canción')
         track -= 1
     guild = ctx.guild
+    if guild.voice_client == None:
+        join_channel(ctx)
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
         await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
