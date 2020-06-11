@@ -30,7 +30,7 @@ async def pass_track(ctx):
         asyncio.run(asyncio.sleep(0.5))
     track = track
     if not ctx.guild.voice_client.is_playing() or not ctx.guild.voice_client.is_paused():
-        await ctx.guild.voice_client.play(discord.FFmpegOpusAudio(queue[track]))
+        ctx.guild.voice_client.play(discord.FFmpegOpusAudio(queue[track]))
     else:
         ctx.guild.voice_client.source = discord.FFmpegOpusAudio(queue[track])
     track += 1
