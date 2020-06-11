@@ -49,4 +49,5 @@ async def play(ctx,url):
         await voice_client.play(discord.FFmpegOpusAudio(queue[track]))
         pass_track(ctx)
         
-        
+async def queue_read(ctx):
+    await ctx.channel.send(queue)
