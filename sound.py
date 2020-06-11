@@ -28,11 +28,14 @@ async def pass_track(ctx):
     global track
     while not queue[track]:
         asyncio.run(asyncio.sleep(0.5))
-    track = track
+    try:
+        current_song = queue[track]
+    except:
+        current_song = queue[len(queue) - 1]
     if not ctx.guild.voice_client.is_playing() or not ctx.guild.voice_client.is_paused():
-        ctx.guild.voice_client.play(discord.FFmpegOpusAudio(queue[track]))
+        ctx.guild.voice_client.play(discord.FFmpegOpusAudio(current_song), after=await pass_track(ctx))
     else:
-        ctx.guild.voice_client.source = discord.FFmpegOpusAudio(queue[track])
+        ctx.guild.voice_client.source = discord.FFmpegOpusAudio(current_song)
     track += 1
 
 def download(url, track):
@@ -45,17 +48,17 @@ def download(url, track):
 async def play(ctx,url):
     global track
     track += 1
+    download(url, track)
     try:
-        download(url, track)
+        current_song = queue[track]
     except:
-        ctx.channel.send('Error encontrando tu canción')
-        track -= 1
+        current_song = queue[len(queue) - 1]
     guild = ctx.guild
     if guild.voice_client == None:
         await join_channel(ctx)
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
-        voice_client.play(discord.FFmpegOpusAudio(queue[track]), after=await pass_track(ctx))
+        voice_client.play(discord.FFmpegOpusAudio(current_song), after=await pass_track(ctx))
         
 async def queue_read(ctx):
     await ctx.channel.send(queue)
