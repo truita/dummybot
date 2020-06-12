@@ -64,7 +64,7 @@ async def play(ctx,url):
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
         loop.run_until_complete(voice_client.play(discord.FFmpegOpusAudio(current_song)))
-        voice_client.loop.call_soon_threadsafe(pass_track,ctx)
+        loop.call_soon_threadsafe(pass_track,ctx)
         
 async def queue_read(ctx):
     await ctx.channel.send(queue)
