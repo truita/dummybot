@@ -25,7 +25,7 @@ async def leave_channel(ctx:commands.Context):
     track = -1
 
 
-def pass_track(error,ctx=None):
+async def pass_track(ctx):
     global track
     while not queue[track]:
         asyncio.run(asyncio.sleep(0.5))
@@ -34,7 +34,8 @@ def pass_track(error,ctx=None):
     except:
         current_song = queue[len(queue) - 1]
     if not ctx.guild.voice_client.is_playing() or not ctx.guild.voice_client.is_paused():
-        ctx.guild.voice_client.play(discord.FFmpegOpusAudio(current_song), after=pass_track([Exception],ctx=ctx))
+        ctx.guild.voice_client.play(discord.FFmpegOpusAudio(current_song))
+        ctx.guild.voice_client.loop.ensure_future(pass_track(ctx))
     else:
         ctx.guild.voice_client.source = discord.FFmpegOpusAudio(current_song)
     track += 1
@@ -42,7 +43,7 @@ def pass_track(error,ctx=None):
 def download(url, track):
     with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/%(id)s.webm'}) as ydl:
         ydl.download([url])
-        filename = "/tmp/dummybot/{0}.webm".format(ydl.extract_info(url)['id'])
+        filename = "./tmp/dummybot/{0}.webm".format(ydl.extract_info(url)['id'])
     global queue
     queue.append(filename)
     
@@ -59,7 +60,8 @@ async def play(ctx,url):
         await join_channel(ctx)
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
-        voice_client.play(discord.FFmpegOpusAudio(current_song), after=pass_track([Exception],ctx=ctx))
+        voice_client.play(discord.FFmpegOpusAudio(current_song))
+        voice_client.loop.ensure_future(pass_track(ctx))
         
 async def queue_read(ctx):
     await ctx.channel.send(queue)
