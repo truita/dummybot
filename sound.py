@@ -52,7 +52,7 @@ async def play(ctx,url):
         await join_channel(ctx)
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
-        current_song = os.open(current_song)
+        current_song = os.read(current_song)
         voice_client.play(discord.FFmpegOpusAudio(current_song))
         
 async def queue_read(ctx):
