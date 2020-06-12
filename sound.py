@@ -35,7 +35,7 @@ def pass_track(ctx):
 def download(url, track):
     with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '/tmp/dummybot/%(id)s.webm'}) as ydl:
         ydl.download([url])
-        filename = "/tmp/dummybot/{0}.webm".format(ydl.extract_info(url)['id'])
+        filename = "/tmp/dummybot/{0}.webm".format(ydl.extract_info(url, download=False)['id'])
     global queue
     queue.append(filename)
     
