@@ -25,7 +25,7 @@ async def leave_channel(ctx:commands.Context):
     track = -1
 
 
-def pass_track(ctx):
+def pass_track(error,ctx=None):
     global track
     while not queue[track]:
         asyncio.run(asyncio.sleep(0.5))
@@ -34,7 +34,7 @@ def pass_track(ctx):
     except:
         current_song = queue[len(queue) - 1]
     if not ctx.guild.voice_client.is_playing() or not ctx.guild.voice_client.is_paused():
-        ctx.guild.voice_client.play(discord.FFmpegOpusAudio(current_song), after= pass_track(ctx))
+        ctx.guild.voice_client.play(discord.FFmpegOpusAudio(current_song), after=pass_track([Exception],ctx=ctx))
     else:
         ctx.guild.voice_client.source = discord.FFmpegOpusAudio(current_song)
     track += 1
@@ -59,7 +59,7 @@ async def play(ctx,url):
         await join_channel(ctx)
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
-        voice_client.play(discord.FFmpegOpusAudio(current_song), after=pass_track(ctx))
+        voice_client.play(discord.FFmpegOpusAudio(current_song), after=pass_track([Exception],ctx=ctx))
         
 async def queue_read(ctx):
     await ctx.channel.send(queue)

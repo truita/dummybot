@@ -152,7 +152,7 @@ async def play_command(ctx, arg1):
 
 @bot.command(name='next')
 async def next_command(ctx):
-    await pass_track(ctx)
+    await pass_track(None,ctx=ctx)
 
 @bot.command(name='queue')
 async def queue_command(ctx):
