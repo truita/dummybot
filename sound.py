@@ -36,7 +36,7 @@ async def pass_track(ctx):
         current_song = queue[len(queue) - 1]
     if not voice_client.is_playing() or not ctx.guild.voice_client.is_paused():
         voice_client.play(discord.FFmpegOpusAudio(current_song))
-        voice_client.loop.call_soon(pass_track,ctx)
+        voice_client.loop.call_soon_threadsafe(pass_track,ctx)
     else:
         ctx.guild.voice_client.source = discord.FFmpegOpusAudio(current_song)
     track += 1
@@ -62,7 +62,7 @@ async def play(ctx,url):
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
         voice_client.play(discord.FFmpegOpusAudio(current_song))
-        voice_client.loop.call_soon(pass_track,ctx)
+        voice_client.loop.call_soon_threadsafe(pass_track,ctx)
         
 async def queue_read(ctx):
     await ctx.channel.send(queue)
