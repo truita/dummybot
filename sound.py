@@ -25,7 +25,7 @@ async def leave_channel(ctx:commands.Context):
     track = -1
 
 
-async def pass_track(ctx):
+def pass_track(ctx):
     print('Next track has been called!')
     global track
     voice_client = ctx.guild.voice_client
@@ -52,7 +52,7 @@ async def play(ctx,url):
         await join_channel(ctx)
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
-        voice_client.play(discord.FFmpegOpusAudio(current_song))
+        voice_client.play(discord.FFmpegOpusAudio(current_song), after=pass_track(ctx))
         
 async def queue_read(ctx):
     await ctx.channel.send(queue)
