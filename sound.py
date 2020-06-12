@@ -66,8 +66,8 @@ async def play(ctx,url):
         await join_channel(ctx)
     voice_client = guild.voice_client
     if not voice_client.is_playing() or not voice_client.is_paused():
-        task = asyncio.create_task(voice_client.play(discord.FFmpegOpusAudio(current_song)))
-        asyncio.run(pass_track(ctx,task=task))
+        _task = asyncio.create_task(voice_client.play(discord.FFmpegOpusAudio(current_song)))
+        asyncio.run(pass_track(ctx,task=_task))
         
 async def queue_read(ctx):
     await ctx.channel.send(queue)
