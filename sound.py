@@ -15,7 +15,7 @@ class MusicManager():
         if ctx.author.voice.channel == None:
             ctx.channel.send("No estás conectado a un canal de voz!")
         else:
-            channel = ctx.author.voice.channel
+            channel = ctx.author.voice
             guild = ctx.guild
             await channel.connect()
             self.guild_queues[guild.id] = []
