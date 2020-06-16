@@ -12,10 +12,10 @@ class MusicManager():
     guild_tracks = {}
 
     async def join_channel(self,ctx:commands.Context):
-        if ctx.author.voice.channel == None:
+        if ctx.author.voice == None:
             ctx.channel.send("No estás conectado a un canal de voz!")
         else:
-            channel = ctx.author.voice
+            channel = ctx.author.voice.channel
             guild = ctx.guild
             await channel.connect()
             self.guild_queues[guild.id] = []
