@@ -13,7 +13,7 @@ class MusicManager():
 
     async def join_channel(self,ctx:commands.Context):
         if ctx.author.voice == None:
-            ctx.channel.send("No estás conectado a un canal de voz!")
+            await ctx.channel.send("No estás conectado a un canal de voz!")
         else:
             channel = ctx.author.voice.channel
             guild = ctx.guild
