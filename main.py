@@ -4,14 +4,14 @@ from discord.ext import commands, tasks #The library for a discord bot (along wi
 from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
 from pole import pole, subpole, fail, resetpole, ranking
-from sound import initialize_voice, join_channel, leave_channel, play, pass_track, queue_read
+from sound import MusicManager
 #
 from datetime import datetime, timedelta #Needed for scheduling
 import asyncio #Also needed for scheduling
 
 bot = commands.Bot(command_prefix='.', help_command=None) #Creates the bot object
 token = str(sys.argv[1]) #Gets the bot token from the arguments
-initialize_voice(bot)
+music = MusicManager()
 
 @tasks.loop(hours=24) #Every 24 hours resets pole variables
 async def pole_schedule():
@@ -140,22 +140,10 @@ async def google_command(ctx, *, arg1):
 
 @bot.command(name='join')
 async def join_command(ctx):
-    await join_channel(ctx)
+    await music.join_channel(ctx)
 
 @bot.command(name='leave')
 async def leave_command(ctx):
-    await leave_channel(ctx)
-
-@bot.command(name='play')
-async def play_command(ctx, arg1):
-    await play(ctx, arg1)
-
-@bot.command(name='next')
-async def next_command(ctx):
-    await pass_track(ctx)
-
-@bot.command(name='queue')
-async def queue_command(ctx):
-    await queue_read(ctx)
+    await music.leave_channel(ctx)
 
 bot.run(token)
