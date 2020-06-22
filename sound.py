@@ -5,7 +5,6 @@ import os, asyncio
 
 queue = []
 track = -1
-#Hi there
 
 class MusicManager():
     guild_queues = {}
