@@ -1,3 +1,0 @@
-deploy:
-  script:
-     sudo systemctl restart dummybot
