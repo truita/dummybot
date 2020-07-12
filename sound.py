@@ -38,7 +38,8 @@ class MusicManager():
             self.guild_tracks[guild.id] += 1 
     
     def play(self,ctx:commands.Context, arg):
-        voice_client:discord.VoiceClient = ctx.guild.voice_client
+        voice_client = ctx.guild.voice_client
+        print(arg)
         with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
             song_info = ydl.extract_info(arg, False)
             ydl.download([arg])
