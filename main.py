@@ -146,4 +146,8 @@ async def join_command(ctx):
 async def leave_command(ctx):
     await music.leave_channel(ctx)
 
+@bot.command(name='play')
+async def play_command(ctx, *, args):
+    music.play(ctx, args)
+
 bot.run(token)
