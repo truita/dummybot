@@ -27,10 +27,11 @@ class MusicManager():
 
     def queue(self,guild:discord.guild, song_id):
         song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, song_id)
-
+        print("Queue launched!")
         if not(guild.id in self.guild_queues.keys()):
             self.guild_queues[guild.id] = [song_file]
             self.guild_tracks[guild.id] = 0
+            print("Queue set!")
         elif song_file in self.guild_queues[guild.id]:
             return True
         else:
@@ -43,8 +44,7 @@ class MusicManager():
         with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
             song_info = ydl.extract_info(arg, False)
             ydl.download([arg])
-        if self.queue(ctx.guild, song_info["id"]):
-            ctx.channel.send("La canción ya está en la cola!")
+        self.queue(ctx.guild, song_info["id"])
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
         voice_client.play(discord.FFmpegAudio(current_song, args=None), lambda a: loop.create_task(self.next_song(ctx)))
