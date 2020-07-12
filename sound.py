@@ -40,7 +40,7 @@ class MusicManager():
             self.guild_tracks[guild.id] += 1 
     
     def play(self,ctx:commands.Context, arg):
-        voice_client = ctx.guild.voice_client
+        voice_client = self.guild_players[ctx.guild.id]
         print(arg)
         with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
             song_info = ydl.extract_info(arg, False)
@@ -55,5 +55,5 @@ class MusicManager():
             return
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
-        voice_client:discord.VoiceClient = ctx.guild.voice_client
+        voice_client = self.guild_players[ctx.guild.id]
         voice_client.play(discord.FFmpegAudio(current_song, args=None), lambda a: loop.create_task(self.next_song(ctx)))
