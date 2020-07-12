@@ -7,6 +7,7 @@ class MusicManager():
     DOWNLOAD_PATH = "/tmp/dummybot"
     guild_queues = {}
     guild_tracks = {}
+    guild_players = {}
 
     async def join_channel(self,ctx:commands.Context):
         if ctx.author.voice == None:
@@ -14,7 +15,7 @@ class MusicManager():
         else:
             channel = ctx.author.voice.channel
             guild = ctx.guild
-            await channel.connect()
+            self.guild_players[guild.id] = await channel.connect()
             self.guild_queues[guild.id] = []
             self.guild_tracks[guild.id] = 0
     
@@ -28,7 +29,7 @@ class MusicManager():
     def queue(self,guild:discord.guild, song_id):
         song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, song_id)
         print("Queue launched!")
-        if not(guild.id in self.guild_queues.keys()):
+        if guild.id in self.guild_queues.keys() == None:
             self.guild_queues[guild.id] = [song_file]
             self.guild_tracks[guild.id] = 0
             print("Queue set!")
