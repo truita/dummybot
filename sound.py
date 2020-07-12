@@ -41,7 +41,7 @@ class MusicManager():
         voice_client:discord.VoiceClient = ctx.guild.voice_client
         with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
             song_info = ydl.extract_info(arg, False)
-            ydl.download(arg)
+            ydl.download([arg])
         if self.queue(ctx.guild, song_info["id"]):
             ctx.channel.send("La canción ya está en la cola!")
         loop = asyncio.get_event_loop()
