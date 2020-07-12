@@ -42,7 +42,7 @@ class MusicManager():
         self.queue(ctx.guild, song_info["id"])
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
-        voice_client.play(discord.FFmpegAudio(current_song, args=[]]), after=lambda a: loop.create_task(self.next_song(ctx)))
+        voice_client.play(discord.FFmpegAudio(current_song, args=[]), after=lambda a: loop.create_task(self.next_song(ctx)))
 
     async def next_song(self, ctx):
         if self.guild_queues[ctx.guild.id] == None:
@@ -50,4 +50,4 @@ class MusicManager():
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
         voice_client = self.guild_players[ctx.guild.id]
-        voice_client.play(discord.FFmpegAudio(current_song, args=[]]), after=lambda a: loop.create_task(self.next_song(ctx)))
+        voice_client.play(discord.FFmpegAudio(current_song, args=[]), after=lambda a: loop.create_task(self.next_song(ctx)))
