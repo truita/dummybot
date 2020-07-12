@@ -7,7 +7,6 @@ class MusicManager():
     DOWNLOAD_PATH = "/tmp/dummybot"
     guild_queues = {}
     guild_tracks = {}
-    guild_players = {}
 
     async def join_channel(self,ctx:commands.Context):
         if ctx.author.voice == None:
@@ -15,7 +14,7 @@ class MusicManager():
         else:
             channel = ctx.author.voice.channel
             guild = ctx.guild
-            self.guild_players[guild.id] = await channel.connect()
+            await channel.connect()
             self.guild_queues[guild.id] = []
             self.guild_tracks[guild.id] = 0
     
@@ -34,20 +33,19 @@ class MusicManager():
         print("Queue set!")
     
     def play(self,ctx:commands.Context, arg):
-        voice_client = self.guild_players[ctx.guild.id]
-        print(arg)
+        voice_client = ctx.guild.voice_client
         with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
             song_info = ydl.extract_info(arg, False)
             ydl.download([arg])
         self.queue(ctx.guild, song_info["id"])
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
-        voice_client.play(discord.FFmpegAudio(current_song, args=[]), after=lambda a: loop.create_task(self.next_song(ctx)))
+        voice_client.play(discord.FFmpegOpusAudio(current_song), after=lambda a: loop.create_task(self.next_song(ctx)))
 
     async def next_song(self, ctx):
         if self.guild_queues[ctx.guild.id] == None:
             return
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
-        voice_client = self.guild_players[ctx.guild.id]
-        voice_client.play(discord.FFmpegAudio(current_song, args=[]), after=lambda a: loop.create_task(self.next_song(ctx)))
+        voice_client = ctx.guild.voice_client
+        voice_client.play(discord.FFmpegOpusAudio(current_song), after=lambda a: loop.create_task(self.next_song(ctx)))
