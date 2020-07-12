@@ -36,9 +36,10 @@ class MusicManager():
             song_info = ydl.extract_info(arg, False)
             ydl.download([arg])
         self.queue(ctx.guild, song_info["id"])
-        loop = asyncio.get_event_loop()
-        current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
-        voice_client.play(discord.FFmpegOpusAudio(current_song), after=lambda a: loop.create_task(self.next_song(ctx)))
+        if not voice_client.is_playing():
+            loop = asyncio.get_event_loop()
+            current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
+            voice_client.play(discord.FFmpegOpusAudio(current_song), after=lambda a: loop.create_task(self.next_song(ctx)))
 
     async def next_song(self, ctx):
         if self.guild_queues[ctx.guild.id] == None:
