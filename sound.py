@@ -29,15 +29,9 @@ class MusicManager():
     def queue(self,guild:discord.guild, song_id):
         song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, song_id)
         print("Queue launched!")
-        if guild.id in self.guild_queues.keys() == None:
-            self.guild_queues[guild.id] = [song_file]
-            self.guild_tracks[guild.id] = 0
-            print("Queue set!")
-        elif song_file in self.guild_queues[guild.id]:
-            return True
-        else:
-            self.guild_queues[guild.id].append(song_file)
-            self.guild_tracks[guild.id] += 1 
+        self.guild_queues[guild.id] = [song_file]
+        self.guild_tracks[guild.id] = 0
+        print("Queue set!")
     
     def play(self,ctx:commands.Context, arg):
         voice_client = self.guild_players[ctx.guild.id]
