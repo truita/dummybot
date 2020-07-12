@@ -27,10 +27,8 @@ class MusicManager():
 
     def queue(self,guild:discord.guild, song_id):
         song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, song_id)
-        print("Queue launched!")
-        self.guild_queues[guild.id] = [song_file]
-        self.guild_tracks[guild.id] = 0
-        print("Queue set!")
+        self.guild_queues[guild.id].append(song_file)
+        self.guild_tracks[guild.id] += 1
     
     def play(self,ctx:commands.Context, arg):
         voice_client = ctx.guild.voice_client
