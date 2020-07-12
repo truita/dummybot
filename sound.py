@@ -16,14 +16,14 @@ class MusicManager():
             guild = ctx.guild
             await channel.connect()
             self.guild_queues[guild.id] = []
-            self.guild_tracks[guild.id] = 0
+            self.guild_tracks[guild.id] = -1
     
     async def leave_channel(self,ctx:commands.Context):
         guild = ctx.guild
         voice_client = guild.voice_client
         await voice_client.disconnect()
         self.guild_queues[guild.id] = []
-        self.guild_tracks[guild.id] = 0
+        self.guild_tracks[guild.id] = -1
 
     def queue(self,guild:discord.guild, song_id):
         song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, song_id)
