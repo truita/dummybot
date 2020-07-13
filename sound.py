@@ -33,7 +33,8 @@ class MusicManager():
             song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, i)
             self.guild_queues[guild.id].append(song_file)
     
-    async def download(self,url, after):
+    async def download(self,url:list, after):
+        print(url)
         with youtube_dl.YoutubeDL({'format': 'bestaudio/opus','default_search': 'ytsearch1','outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH), 'nooverwrites': True}) as ydl:
             for song in url:
                 ydl.download([song])
