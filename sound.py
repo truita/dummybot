@@ -53,9 +53,6 @@ class MusicManager():
     async def next_song(self, ctx):
         self.guild_tracks[ctx.guild.id] += 1
 
-        print(self.guild_tracks[ctx.guild.id])
-        print(self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]])
-
         if self.guild_queues[ctx.guild.id] == None:
             return
         
