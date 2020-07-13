@@ -9,7 +9,7 @@ from sound import MusicManager
 from datetime import datetime, timedelta #Needed for scheduling
 import asyncio #Also needed for scheduling
 
-bot = commands.Bot(command_prefix=':', help_command=None) #Creates the bot object
+bot = commands.Bot(command_prefix='.', help_command=None) #Creates the bot object
 token = str(sys.argv[1]) #Gets the bot token from the arguments
 music = MusicManager()
 
