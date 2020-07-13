@@ -37,7 +37,9 @@ class MusicManager():
         print(url)
         with youtube_dl.YoutubeDL({'format': 'bestaudio/opus','default_search': 'ytsearch1','outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH), 'nooverwrites': True}) as ydl:
             for song in url:
-                ydl.download([song])
+                song_list = []
+                song_list.append(song)
+                ydl.download(song_list)
                 asyncio.sleep(0.5)
         after()
     
