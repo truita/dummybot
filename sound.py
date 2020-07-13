@@ -29,8 +29,9 @@ class MusicManager():
         self.guild_loop[guild.id] = False
 
     def __queue__(self,guild:discord.guild, song_id):
-        song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, song_id)
-        self.guild_queues[guild.id].append(song_file)
+        for i in song_id:
+            song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, i)
+            self.guild_queues[guild.id].append(song_file)
     
     async def download(self,url, after):
         with youtube_dl.YoutubeDL({'format': 'bestaudio/opus','default_search': 'ytsearch1','outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
@@ -50,7 +51,15 @@ class MusicManager():
 
         with youtube_dl.YoutubeDL({'format': 'bestaudio/opus', 'default_search': 'ytsearch1'}) as ydl:
             song_info = ydl.extract_info(arg, False)
-        self.__queue__(ctx.guild, song_info["id"])
+
+        song_id = []
+        if "entries" in song_info.keys():
+            for i in song_info["entries"]:
+                song_id.append(i["id"])
+        else:
+            song_id.append(song_info["id"])
+
+        self.__queue__(ctx.guild, song_id)
         loop.create_task(self.download(arg, lambda: self.__do_play__(ctx)))
 
     async def next_song(self, ctx):
