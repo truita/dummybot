@@ -38,9 +38,9 @@ class MusicManager():
             ydl.download([url])
         after()
     
-    def __do_play__(self,ctx):
+    async def __do_play__(self,ctx):
         if ctx.guild.voice_client == None:
-            asyncio.run(self.join_channel(ctx))
+            await self.join_channel(ctx)
         voice_client = ctx.guild.voice_client
         if voice_client.is_playing():
             voice_client.stop()
@@ -63,7 +63,7 @@ class MusicManager():
 
         self.__queue__(ctx.guild, song_id)
         if not ctx.guild.voice_client.is_playing():
-            loop.create_task(self.download(arg, lambda: self.__do_play__(ctx)))
+            loop.create_task(self.download(arg, lambda: loop.create_task(self.__do_play__(ctx))))
 
     async def next_song(self, ctx):
         self.guild_tracks[ctx.guild.id] += 1
@@ -78,4 +78,5 @@ class MusicManager():
                 await self.leave_channel(ctx)
                 return
         
-        self.__do_play__(ctx)
+        loop = asyncio.get_event_loop()
+        loop.create_task(self.__do_play__(ctx))
