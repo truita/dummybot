@@ -56,8 +56,9 @@ class MusicManager():
         if self.guild_queues[ctx.guild.id] == None:
             return
         
+        print(len(self.guild_queues[ctx.guild.id]))
         if len(self.guild_queues[ctx.guild.id]) - 1 < self.guild_tracks[ctx.guild.id]:
-            if self.guild_loop[ctx.guild.id]:
+            if self.guild_loop[ctx.guild.id] == True:
                 self.guild_tracks[ctx.guild.id] = 0
             else:
                 self.leave_channel(ctx)
