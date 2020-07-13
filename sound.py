@@ -34,11 +34,11 @@ class MusicManager():
             self.guild_queues[guild.id].append(song_file)
     
     async def download(self,url:list, after):
-        print(url)
         with youtube_dl.YoutubeDL({'format': 'bestaudio/opus','default_search': 'ytsearch1','outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH), 'nooverwrites': True}) as ydl:
             for song in url:
                 song_list = []
                 song_list.append(song)
+                print(song_list)
                 ydl.download(song_list)
                 asyncio.sleep(0.5)
         after()
