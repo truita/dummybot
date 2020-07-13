@@ -32,14 +32,14 @@ class MusicManager():
     
     def play(self,ctx:commands.Context, arg):
         voice_client = ctx.guild.voice_client
-        with youtube_dl.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
+        with youtube_dl.YoutubeDL({'format': 'opus', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
             song_info = ydl.extract_info(arg, False)
             ydl.download([arg])
         self.queue(ctx.guild, song_info["id"])
         if not voice_client.is_playing():
             loop = asyncio.get_event_loop()
             current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
-            voice_client.play(discord.FFmpegOpusAudio(current_song), after=lambda a: loop.create_task(self.next_song(ctx)))
+            voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
 
     async def next_song(self, ctx):
         if self.guild_queues[ctx.guild.id] == None:
@@ -47,4 +47,4 @@ class MusicManager():
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
         voice_client = ctx.guild.voice_client
-        voice_client.play(discord.FFmpegOpusAudio(current_song), after=lambda a: loop.create_task(self.next_song(ctx)))
+        voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
