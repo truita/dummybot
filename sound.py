@@ -17,7 +17,7 @@ class MusicManager():
             guild = ctx.guild
             await channel.connect()
             self.guild_queues[guild.id] = []
-            self.guild_tracks[guild.id] = -1
+            self.guild_tracks[guild.id] = 0
             self.guild_loop[guild.id] = False
     
     async def leave_channel(self,ctx:commands.Context):
