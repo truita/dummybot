@@ -148,6 +148,6 @@ async def leave_command(ctx):
 
 @bot.command(name='play')
 async def play_command(ctx, *, args):
-    music.play(ctx, args)
+    await music.play(ctx, args)
 
 bot.run(token)
