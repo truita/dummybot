@@ -150,4 +150,8 @@ async def leave_command(ctx):
 async def play_command(ctx, *, args):
     await music.play(ctx, args)
 
+@bot.command(name='next')
+async def next_command(ctx):
+    await music.next_song(ctx)
+
 bot.run(token)

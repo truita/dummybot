@@ -37,7 +37,7 @@ class MusicManager():
         with youtube_dl.YoutubeDL({'format': 'bestaudio/opus','default_search': 'ytsearch1','outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH), 'nooverwrites': True}) as ydl:
             for i in url:
                 ydl.download([i])
-                asyncio.sleep(0.1)
+                await asyncio.sleep(0.1)
         after()
     
     def __do_play__(self,ctx):
@@ -80,9 +80,8 @@ class MusicManager():
                 await self.leave_channel(ctx)
                 return
         
-        loop = asyncio.get_event_loop()
-        current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
         voice_client = ctx.guild.voice_client
         if voice_client.is_playing():
             voice_client.stop()
-        voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
+        
+        self.__do_play__(ctx)
