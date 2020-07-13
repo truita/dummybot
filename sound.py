@@ -35,7 +35,9 @@ class MusicManager():
     
     async def download(self,url, after):
         with youtube_dl.YoutubeDL({'format': 'bestaudio/opus','default_search': 'ytsearch1','outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH), 'nooverwrites': True}) as ydl:
-            ydl.download([url])
+            for i in url:
+                ydl.download([i])
+                asyncio.sleep(0.1)
         after()
     
     def __do_play__(self,ctx):
@@ -53,15 +55,17 @@ class MusicManager():
             song_info = ydl.extract_info(arg, False)
 
         song_id = []
+        song_urls = []
         if "entries" in song_info.keys():
             for i in song_info["entries"]:
                 song_id.append(i["id"])
+                song_urls.append(i["webpage_url"])
         else:
             song_id.append(song_info["id"])
 
         self.__queue__(ctx.guild, song_id)
         if not ctx.guild.voice_client.is_playing():
-            loop.create_task(self.download(arg, lambda: self.__do_play__(ctx)))
+            loop.create_task(self.download(song_urls, lambda: self.__do_play__(ctx)))
 
     async def next_song(self, ctx):
         self.guild_tracks[ctx.guild.id] += 1
