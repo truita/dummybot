@@ -44,10 +44,10 @@ class MusicManager():
         voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
     
     def play(self,ctx:commands.Context, arg):
-        if ctx.guild.voice_client == None:
-            await self.join_channel(ctx)
-
         loop = asyncio.get_event_loop()
+        if ctx.guild.voice_client == None:
+            loop.run_until_complete(self.join_channel(ctx))
+
         with youtube_dl.YoutubeDL({'format': 'bestaudio/opus'}) as ydl:
             song_info = ydl.extract_info(arg, False)
         self.__queue__(ctx.guild, song_info["id"])
