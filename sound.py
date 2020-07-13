@@ -33,7 +33,7 @@ class MusicManager():
         self.guild_queues[guild.id].append(song_file)
     
     async def download(self,url, after):
-        with youtube_dl.YoutubeDL({'format': 'bestaudio/opus', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
+        with youtube_dl.YoutubeDL({'format': 'bestaudio/opus','default_search': 'ytsearch' , 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
             ydl.download([url])
         after()
     
@@ -48,7 +48,7 @@ class MusicManager():
         if ctx.guild.voice_client == None:
             await self.join_channel(ctx)
 
-        with youtube_dl.YoutubeDL({'format': 'bestaudio/opus'}) as ydl:
+        with youtube_dl.YoutubeDL({'format': 'bestaudio/opus', 'default_search': 'ytsearch'}) as ydl:
             song_info = ydl.extract_info(arg, False)
         self.__queue__(ctx.guild, song_info["id"])
         loop.create_task(self.download(arg, lambda: self.__do_play__(ctx)))
