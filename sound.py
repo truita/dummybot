@@ -51,10 +51,6 @@ class MusicManager():
             song_info = ydl.extract_info(arg, False)
         loop.create_task(self.download(arg, lambda: self.__do_play(ctx)))
         self.queue(ctx.guild, song_info["id"])
-        if not voice_client.is_playing():
-            
-            current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
-            voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
 
     async def next_song(self, ctx):
         if self.guild_queues[ctx.guild.id] == None:
