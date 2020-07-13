@@ -78,4 +78,4 @@ class MusicManager():
                 await self.leave_channel(ctx)
                 return
         
-        self.__do_play__(ctx)
+        self.__do_play__()
