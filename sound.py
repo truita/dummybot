@@ -32,7 +32,7 @@ class MusicManager():
     
     def play(self,ctx:commands.Context, arg):
         voice_client = ctx.guild.voice_client
-        with youtube_dl.YoutubeDL({'format': 'opus', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
+        with youtube_dl.YoutubeDL({'format': 'audio/opus', 'outtmpl': '{0}/%(id)s'.format(self.DOWNLOAD_PATH)}) as ydl:
             song_info = ydl.extract_info(arg, False)
             ydl.download([arg])
         self.queue(ctx.guild, song_info["id"])
