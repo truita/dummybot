@@ -56,7 +56,7 @@ class MusicManager():
         if self.guild_queues[ctx.guild.id] == None:
             return
         
-        if self.guild_queues[ctx.guild.id].length - 1 < self.guild_tracks[ctx.guild.id]:
+        if len(self.guild_queues[ctx.guild.id]) - 1 < self.guild_tracks[ctx.guild.id]:
             if self.guild_loop[ctx.guild.id]:
                 self.guild_tracks[ctx.guild.id] = 0
             else:
