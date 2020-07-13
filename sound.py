@@ -60,7 +60,8 @@ class MusicManager():
             song_id.append(song_info["id"])
 
         self.__queue__(ctx.guild, song_id)
-        loop.create_task(self.download(arg, lambda: self.__do_play__(ctx)))
+        if not ctx.guild.voice_client.is_playing():
+            loop.create_task(self.download(arg, lambda: self.__do_play__(ctx)))
 
     async def next_song(self, ctx):
         self.guild_tracks[ctx.guild.id] += 1
