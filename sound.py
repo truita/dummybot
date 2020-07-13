@@ -59,11 +59,12 @@ class MusicManager():
         if self.guild_queues[ctx.guild.id] == None:
             return
         
-        if self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] is None and self.guild_loop[ctx.guild.id] is True:
-            self.guild_tracks[ctx.guild.id] = 0
-        elif self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] is None:
-            self.leave_channel(ctx)
-
+        if self.guild_queues[ctx.guild.id].length - 1 < self.guild_tracks[ctx.guild.id]:
+            if self.guild_loop[ctx.guild.id]:
+                self.guild_tracks[ctx.guild.id] = 0
+            else:
+                self.leave_channel(ctx)
+        
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
         voice_client = ctx.guild.voice_client
