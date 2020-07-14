@@ -45,10 +45,10 @@ class MusicManager():
         after()
     
     def __do_play__(self,ctx):
-        print("Playing!")
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
+        print(current_song)
         voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
     
     async def play(self,ctx:commands.Context, arg:str):
