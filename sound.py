@@ -60,6 +60,17 @@ class MusicManager():
 
         if arg.find("playlist") + 1:        #We add 1 because find returns -1 if nothing is found
             playlist_id = arg[arg.find("list=") + 5 : ]
+            
+            playlist_name = api.get_playlist_by_id(playlist_id=playlist_id).items[0].snippet.title
+
+            msg_embed = discord.Embed(
+                colour=discord.Colour.blue(),
+                title="**Now Playing**",
+                description=playlist_name,
+                url=arg
+            )
+            await ctx.channel.send(embed=msg_embed)
+
             pageToken = None
             while True:
                 playlist = api.get_playlist_items(playlist_id= playlist_id, page_token=pageToken)
@@ -75,9 +86,31 @@ class MusicManager():
         elif arg.find("watch?v=") + 1:
             if arg.find("&") + 1: #Removes additional video queries (such as list)
                 arg = arg[:arg.find("&")]
-            song_list.append(arg[arg.find("watch?v=") + 8 : ])
+            video_id = arg[arg.find("watch?v=") + 8 : ]
+            
+            video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
+            msg_embed = discord.Embed(
+                colour=discord.Colour.blue(),
+                title="**Now Playing**",
+                description=video_name,
+                url=arg
+            )
+            await ctx.channel.send(embed=msg_embed)
+
+            song_list.append(video_id)
         else:
-            song_list.append(api.search(q=arg).items[0].id.videoId)  
+            video_id = api.search(q=arg).items[0].id.videoId
+
+            video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
+            msg_embed = discord.Embed(
+                colour=discord.Colour.blue(),
+                title="**Now Playing**",
+                description=video_name,
+                url=arg
+            )
+            await ctx.channel.send(embed=msg_embed)
+
+            song_list.append(video_id)  
 
         
         if ctx.guild.voice_client == None or not ctx.guild.voice_client.is_connected():
