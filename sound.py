@@ -46,6 +46,16 @@ class MusicManager():
             after()
     
     async def __do_play__(self,ctx):
+        video_id = api.get_video_by_id(video_id=self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]])
+        video_url = "https://youtube.com/watch?v={0}".format(video_id)
+        video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
+        msg_embed = discord.Embed(
+            colour=discord.Colour.blue(),
+            title="Now Playing",
+            description="[{0}]({1})[{2}]".format(video_name, video_url, ctx.author.mention)
+        )
+        await ctx.channel.send(embed=msg_embed)
+
         if ctx.guild.voice_client == None:
             await self.join_channel(ctx)
         voice_client = ctx.guild.voice_client
@@ -60,16 +70,6 @@ class MusicManager():
 
         if arg.find("playlist") + 1:        #We add 1 because find returns -1 if nothing is found
             playlist_id = arg[arg.find("list=") + 5 : ]
-            
-            playlist_name = api.get_playlist_by_id(playlist_id=playlist_id).items[0].snippet.title
-
-            msg_embed = discord.Embed(
-                colour=discord.Colour.blue(),
-                title="Now Playing",
-                description="[{0}]({1})[{2}]".format(playlist_name, arg, ctx.author.mention)
-            )
-            await ctx.channel.send(embed=msg_embed)
-
             pageToken = None
             while True:
                 playlist = api.get_playlist_items(playlist_id= playlist_id, page_token=pageToken)
@@ -86,28 +86,10 @@ class MusicManager():
             if arg.find("&") + 1: #Removes additional video queries (such as list)
                 arg = arg[:arg.find("&")]
             video_id = arg[arg.find("watch?v=") + 8 : ]
-            
-            video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
-            msg_embed = discord.Embed(
-                colour=discord.Colour.blue(),
-                title="Now Playing",
-                description="[{0}]({1})[{2}]".format(video_name, arg, ctx.author.mention)
-            )
-            await ctx.channel.send(embed=msg_embed)
-
             song_list.append(video_id)
         else:
             video = api.search(q=arg).items[0]
             video_id = video.id.videoId
-            video_name = video.snippet.title
-            video_url = "https://youtube.com/watch?v={0}".format(video_id)
-            msg_embed = discord.Embed(
-                colour=discord.Colour.blue(),
-                title="Now Playing",
-                description="[{0}]({1})[{2}]".format(video_name, video_url, ctx.author.mention)
-            )
-            await ctx.channel.send(embed=msg_embed)
-
             song_list.append(video_id)  
 
         
@@ -135,6 +117,16 @@ class MusicManager():
         
         voice_client = ctx.guild.voice_client
         if voice_client.is_playing():
+            video_id = api.get_video_by_id(video_id=self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]])
+            video_url = "https://youtube.com/watch?v={0}".format(video_id)
+            video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
+            msg_embed = discord.Embed(
+                colour=discord.Colour.blue(),
+                title="Now Playing",
+                description="[{0}]({1})[{2}]".format(video_name, video_url, ctx.author.mention)
+            )
+            await ctx.channel.send(embed=msg_embed)
+
             current_song = self.DOWNLOAD_PATH + self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
             voice_client.source = discord.FFmpegOpusAudio(current_song, codec="copy")
         else:
