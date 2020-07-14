@@ -162,4 +162,8 @@ async def shuffle_command(ctx):
 async def loop_command(ctx):
     await music.loop(ctx)
 
+@bot.command(name='queue')
+async def queue_command(ctx):
+    await music.show_queue(ctx)
+
 bot.run(token)
