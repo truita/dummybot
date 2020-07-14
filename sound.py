@@ -68,7 +68,7 @@ class MusicManager():
                 title=playlist_name,
                 url=arg
             )
-            msg_embed.set_author(name="Now playing")
+            msg_embed.set_author(name="**Now playing**")
             await ctx.channel.send(embed=msg_embed)
 
             pageToken = None
@@ -94,7 +94,7 @@ class MusicManager():
                 title=video_name,
                 url=arg
             )
-            msg_embed.set_author(name="Now playing")
+            msg_embed.set_author(name="**Now playing**")
             await ctx.channel.send(embed=msg_embed)
 
             song_list.append(video_id)
@@ -108,7 +108,7 @@ class MusicManager():
                 title=video_name,
                 url=video_url
             )
-            msg_embed.set_author(name="Now playing")
+            msg_embed.set_author(name="**Now playing**")
             await ctx.channel.send(embed=msg_embed)
 
             song_list.append(video_id)  
