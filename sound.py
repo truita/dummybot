@@ -79,7 +79,7 @@ class MusicManager():
             song_list.append(api.search(q=arg).items[0].id.videoId)  
 
         
-        if ctx.guild.voice_client == None or not ctx.guild.voice_client.is_playing():
+        if ctx.guild.voice_client == None or not ctx.guild.voice_client.is_connected():
             self.__prepare__(ctx)
             self.__queue__(ctx.guild, song_list)
             loop.create_task(self.download(song_list, after=lambda: loop.create_task(self.__do_play__(ctx))))
@@ -103,10 +103,11 @@ class MusicManager():
         
         voice_client = ctx.guild.voice_client
         if voice_client.is_playing():
-            voice_client.stop()
-        
-        loop = asyncio.get_event_loop()
-        loop.create_task(self.__do_play__(ctx))
+            current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
+            voice_client.source = discord.FFmpegOpusAudio(current_song, codec="copy")
+        else:
+            loop = asyncio.get_event_loop()
+            loop.create_task(self.__do_play__(ctx))
 
     async def shuffle(self,ctx):
         random.shuffle(self.guild_queues[ctx.guild.id])
