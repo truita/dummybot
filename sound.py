@@ -49,7 +49,7 @@ class MusicManager():
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
         print(current_song)
-        voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
+        voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx, err=a)))
     
     async def play(self,ctx:commands.Context, arg:str):
         loop = asyncio.get_event_loop()
@@ -85,7 +85,10 @@ class MusicManager():
         else:
             loop.create_task(self.download(song_list))
 
-    async def next_song(self, ctx):
+    async def next_song(self, ctx,*, err=None):
+        if err:
+            raise err
+
         self.guild_tracks[ctx.guild.id] += 1
 
         if self.guild_queues[ctx.guild.id] == None:
