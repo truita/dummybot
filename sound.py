@@ -65,10 +65,9 @@ class MusicManager():
 
             msg_embed = discord.Embed(
                 colour=discord.Colour.blue(),
-                title=playlist_name,
-                url=arg
+                title="Now Playing",
+                description="[{0}]({1})[{2}]".format(playlist_name, arg, ctx.author.mention)
             )
-            msg_embed.set_author(name="**Now playing**")
             await ctx.channel.send(embed=msg_embed)
 
             pageToken = None
@@ -91,10 +90,9 @@ class MusicManager():
             video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
             msg_embed = discord.Embed(
                 colour=discord.Colour.blue(),
-                title=video_name,
-                url=arg
+                title="Now Playing",
+                description="[{0}]({1})[{2}]".format(video_name, arg, ctx.author.mention)
             )
-            msg_embed.set_author(name="**Now playing**")
             await ctx.channel.send(embed=msg_embed)
 
             song_list.append(video_id)
@@ -105,10 +103,9 @@ class MusicManager():
             video_url = "https://youtube.com/watch?v={0}".format(video_id)
             msg_embed = discord.Embed(
                 colour=discord.Colour.blue(),
-                title=video_name,
-                url=video_url
+                title="Now Playing",
+                description="[{0}]({1})[{2}]".format(video_name, video_url, ctx.author.mention)
             )
-            msg_embed.set_author(name="**Now playing**")
             await ctx.channel.send(embed=msg_embed)
 
             song_list.append(video_id)  
