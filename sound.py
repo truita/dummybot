@@ -33,7 +33,7 @@ class MusicManager():
 
     def __queue__(self,guild:discord.guild, song_id):
         for i in song_id:
-            song_file = "{0}/{1}.webm".format(self.DOWNLOAD_PATH, i)
+            song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, i)
             self.guild_queues[guild.id].append(song_file)
     
     async def download(self,url,*, after=None):
@@ -45,7 +45,7 @@ class MusicManager():
     def __do_play__(self,ctx):
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
-        current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
+        current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
         voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
     
     async def play(self,ctx:commands.Context, arg:str):
