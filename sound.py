@@ -43,7 +43,7 @@ class MusicManager():
                 print("Downloading {0}".format(song_id))
                 YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id)
                 await asyncio.sleep(0.1)
-        if after:
+        if after is not None:
             after()
     
     async def __do_play__(self,ctx):
