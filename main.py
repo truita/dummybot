@@ -154,4 +154,12 @@ async def play_command(ctx, *, args):
 async def next_command(ctx):
     await music.next_song(ctx)
 
+@bot.command(name='shuffle')
+async def shuffle_command(ctx):
+    await music.shuffle(ctx)
+
+@bot.command(name='loop')
+async def loop_command(ctx):
+    await music.loop(ctx)
+
 bot.run(token)
