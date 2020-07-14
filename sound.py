@@ -38,9 +38,10 @@ class MusicManager():
     
     async def download(self,url,*, after=None):
         for song_id in url:
-            print("Downloading {0}".format(song_id))
-            YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id, skip_existing=True)
-            await asyncio.sleep(0.1)
+            if os.path.exists("{0}/{1}.webm".format(self.DOWNLOAD_PATH, song_id)):
+                print("Downloading {0}".format(song_id))
+                YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id)
+                await asyncio.sleep(0.1)
         after()
     
     async def __do_play__(self,ctx):
