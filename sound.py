@@ -43,9 +43,9 @@ class MusicManager():
             await asyncio.sleep(0.1)
         after()
     
-    def __do_play__(self,ctx):
+    async def __do_play__(self,ctx):
         if ctx.guild.voice_client == None:
-            asyncio.run(self.join_channel(ctx))
+            await self.join_channel(ctx)
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
@@ -81,7 +81,7 @@ class MusicManager():
         if ctx.guild.voice_client == None or not ctx.guild.voice_client.is_playing():
             self.__prepare__(ctx)
             self.__queue__(ctx.guild, song_list)
-            loop.create_task(self.download(song_list, after=lambda: self.__do_play__(ctx)))
+            loop.create_task(self.download(song_list, after=lambda: loop.create_task(self.__do_play__(ctx))))
         else:
             self.__queue__(ctx.guild, song_list)
             loop.create_task(self.download(song_list))
@@ -104,4 +104,5 @@ class MusicManager():
         if voice_client.is_playing():
             voice_client.stop()
         
-        self.__do_play__(ctx)
+        loop = asyncio.get_event_loop()
+        loop.create_task(self.__do_play__(ctx))
