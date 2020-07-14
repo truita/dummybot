@@ -117,7 +117,7 @@ class MusicManager():
         self.guild_loop[ctx.guild.id] = True
     
     async def show_queue(self, ctx):
-        result = "```"
+        result = "```ml\n"
         track = 1
         for item in self.guild_queues[ctx.guild.id]:
             video_title = api.get_video_by_id(video_id=item).items[0].snippet.title
