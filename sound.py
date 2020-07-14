@@ -39,11 +39,13 @@ class MusicManager():
     async def download(self,url,*, after=None):
         for song_id in url:
             if not os.path.exists(self.DOWNLOAD_PATH + song_id + ".webm"):
+                print("Downloading {0}".format(song_id))
                 YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id)
                 await asyncio.sleep(0.1)
         after()
     
     def __do_play__(self,ctx):
+        print("Playing!")
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
