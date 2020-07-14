@@ -46,7 +46,7 @@ class MusicManager():
             after()
     
     async def __do_play__(self,ctx):
-        video_id = api.get_video_by_id(video_id=self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]])
+        video_id = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
         video_url = "https://youtube.com/watch?v={0}".format(video_id)
         video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
         msg_embed = discord.Embed(
@@ -117,7 +117,7 @@ class MusicManager():
         
         voice_client = ctx.guild.voice_client
         if voice_client.is_playing():
-            video_id = api.get_video_by_id(video_id=self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]])
+            video_id = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
             video_url = "https://youtube.com/watch?v={0}".format(video_id)
             video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
             msg_embed = discord.Embed(
