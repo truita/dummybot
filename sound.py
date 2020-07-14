@@ -38,10 +38,9 @@ class MusicManager():
     
     async def download(self,url,*, after=None):
         for song_id in url:
-            if not os.path.exists(self.DOWNLOAD_PATH + song_id + ".webm"):
-                print("Downloading {0}".format(song_id))
-                YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id)
-                await asyncio.sleep(0.1)
+            print("Downloading {0}".format(song_id))
+            YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id, skip_existing=True)
+            await asyncio.sleep(0.1)
         after()
     
     def __do_play__(self,ctx):
@@ -49,7 +48,7 @@ class MusicManager():
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
         print(current_song)
-        voice_client.play(discord.FFmpegOpusAudio(current_song), after=lambda a: loop.create_task(self.next_song(ctx)))
+        voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
     
     async def play(self,ctx:commands.Context, arg:str):
         loop = asyncio.get_event_loop()
