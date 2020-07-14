@@ -2,7 +2,7 @@ from pytube import YouTube
 import pyyoutube
 from discord.ext import commands
 import discord
-import os, asyncio
+import os, asyncio, random
 
 api = pyyoutube.Api(api_key=os.getenv("YOUTUBE_API_KEY"))
 
@@ -107,3 +107,9 @@ class MusicManager():
         
         loop = asyncio.get_event_loop()
         loop.create_task(self.__do_play__(ctx))
+
+    async def shuffle(self,ctx):
+        random.shuffle(self.guild_queues[ctx.guild.id])
+
+    async def loop(self,ctx):
+        self.guild_loop[ctx.guild.id] = True
