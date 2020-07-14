@@ -112,9 +112,11 @@ class MusicManager():
 
     async def shuffle(self,ctx):
         random.shuffle(self.guild_queues[ctx.guild.id])
+        ctx.message.add_reaction("🔀")
 
     async def loop(self,ctx):
         self.guild_loop[ctx.guild.id] = True
+        ctx.message.add_reaction("🔄")
     
     async def show_queue(self, ctx):
         result = "```ml\n"
