@@ -33,12 +33,12 @@ class MusicManager():
 
     def __queue__(self,guild:discord.guild, song_id):
         for i in song_id:
-            song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, i)
+            song_file = "{0}/{1}.webm".format(self.DOWNLOAD_PATH, i)
             self.guild_queues[guild.id].append(song_file)
     
     async def download(self,url,*, after=None):
         for song_id in url:
-            YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path="/tmp/dummybot",filename=song_id)
+            YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id)
             await asyncio.sleep(0.1)
         after()
     
