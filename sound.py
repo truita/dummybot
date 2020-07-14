@@ -12,24 +12,24 @@ class MusicManager():
     guild_tracks = {}
     guild_loop = {}
 
+    def __prepare__(self, ctx):
+        guild = ctx.guild
+        self.guild_queues[guild.id] = []
+        self.guild_tracks[guild.id] = 0
+        self.guild_loop[guild.id] = False
+
     async def join_channel(self,ctx:commands.Context):
         if ctx.author.voice == None:
             await ctx.channel.send("No estás conectado a un canal de voz!")
         else:
             channel = ctx.author.voice.channel
-            guild = ctx.guild
             await channel.connect()
-            self.guild_queues[guild.id] = []
-            self.guild_tracks[guild.id] = 0
-            self.guild_loop[guild.id] = False
+            
     
     async def leave_channel(self,ctx:commands.Context):
         guild = ctx.guild
         voice_client = guild.voice_client
         await voice_client.disconnect()
-        self.guild_queues[guild.id] = []
-        self.guild_tracks[guild.id] = 0
-        self.guild_loop[guild.id] = False
 
     def __queue__(self,guild:discord.guild, song_id):
         for i in song_id:
@@ -77,10 +77,13 @@ class MusicManager():
         else:
             song_list.append(api.search(q=arg).items[0].id.videoId)  
 
-        self.__queue__(ctx.guild, song_list)
+        
         if not ctx.guild.voice_client.is_playing():
+            self.__prepare__(ctx)
+            self.__queue__(ctx.guild, song_list)
             loop.create_task(self.download(song_list, after=lambda: self.__do_play__(ctx)))
         else:
+            self.__queue__(ctx.guild, song_list)
             loop.create_task(self.download(song_list))
 
     async def next_song(self, ctx):
