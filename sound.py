@@ -78,7 +78,7 @@ class MusicManager():
             song_list.append(api.search(q=arg).items[0].id.videoId)  
 
         
-        if not ctx.guild.voice_client.is_playing() or ctx.guild.voice_client == None:
+        if ctx.guild.voice_client == None or not ctx.guild.voice_client.is_playing():
             self.__prepare__(ctx)
             self.__queue__(ctx.guild, song_list)
             loop.create_task(self.download(song_list, after=lambda: self.__do_play__(ctx)))
