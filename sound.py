@@ -33,8 +33,7 @@ class MusicManager():
             await voice_client.disconnect()
 
     def __queue__(self,guild:discord.guild, song_id):
-        for i in song_id:
-            song_file = i
+        for song_file in song_id:
             self.guild_queues[guild.id].append(song_file)
     
     async def download(self,url,*, after=None):
@@ -125,4 +124,4 @@ class MusicManager():
             await asyncio.sleep(0.1)
             result + "{0}) {1}\n".format(track,video_title)
             track += 1
-        ctx.message.channel.send(result)
+        await ctx.message.channel.send(result)
