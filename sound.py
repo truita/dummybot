@@ -65,8 +65,8 @@ class MusicManager():
 
             msg_embed = discord.Embed(
                 colour=discord.Colour.blue(),
-                title="**Now Playing**",
-                description=playlist_name,
+                author="**Now Playing**",
+                title=playlist_name,
                 url=arg
             )
             await ctx.channel.send(embed=msg_embed)
@@ -91,22 +91,23 @@ class MusicManager():
             video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
             msg_embed = discord.Embed(
                 colour=discord.Colour.blue(),
-                title="**Now Playing**",
-                description=video_name,
+                author="**Now Playing**",
+                title=video_name,
                 url=arg
             )
             await ctx.channel.send(embed=msg_embed)
 
             song_list.append(video_id)
         else:
-            video_id = api.search(q=arg).items[0].id.videoId
-
-            video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
+            video = api.search(q=arg).items[0]
+            video_id = video.id.videoId
+            video_name = video.snippet.title
+            video_url = "https://youtube.com/watch?v={0}".format(video_id)
             msg_embed = discord.Embed(
                 colour=discord.Colour.blue(),
-                title="**Now Playing**",
-                description=video_name,
-                url=arg
+                author="**Now Playing**",
+                title=video_name,
+                url=video_url
             )
             await ctx.channel.send(embed=msg_embed)
 
