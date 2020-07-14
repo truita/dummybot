@@ -27,9 +27,10 @@ class MusicManager():
             
     
     async def leave_channel(self,ctx:commands.Context):
-        guild = ctx.guild
-        voice_client = guild.voice_client
-        await voice_client.disconnect()
+        if ctx.author.voice.channel == ctx.guild.voice_client.channel:
+            guild = ctx.guild
+            voice_client = guild.voice_client
+            await voice_client.disconnect()
 
     def __queue__(self,guild:discord.guild, song_id):
         for i in song_id:
