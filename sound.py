@@ -44,6 +44,8 @@ class MusicManager():
         after()
     
     def __do_play__(self,ctx):
+        if ctx.guild.voice_client == None:
+            asyncio.run(self.join_channel(ctx))
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
         current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
@@ -52,9 +54,6 @@ class MusicManager():
     
     async def play(self,ctx:commands.Context, arg:str):
         loop = asyncio.get_event_loop()
-        if ctx.guild.voice_client == None:
-            await self.join_channel(ctx)
-
         song_list = []
 
         if arg.find("playlist") + 1:        #We add 1 because find returns -1 if nothing is found
