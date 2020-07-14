@@ -7,7 +7,7 @@ import os, asyncio, random
 api = pyyoutube.Api(api_key=os.getenv("YOUTUBE_API_KEY"))
 
 class MusicManager():
-    DOWNLOAD_PATH = "/tmp/dummybot"
+    DOWNLOAD_PATH = "/tmp/dummybot/"
     guild_queues = {}
     guild_tracks = {}
     guild_loop = {}
@@ -34,12 +34,12 @@ class MusicManager():
 
     def __queue__(self,guild:discord.guild, song_id):
         for i in song_id:
-            song_file = "{0}/{1}".format(self.DOWNLOAD_PATH, i)
+            song_file = i
             self.guild_queues[guild.id].append(song_file)
     
     async def download(self,url,*, after=None):
         for song_id in url:
-            if not os.path.exists("{0}/{1}.webm".format(self.DOWNLOAD_PATH, song_id)):
+            if not os.path.exists("{0}{1}.webm".format(self.DOWNLOAD_PATH, song_id)):
                 print("Downloading {0}".format(song_id))
                 YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id)
                 await asyncio.sleep(0.1)
@@ -51,7 +51,7 @@ class MusicManager():
             await self.join_channel(ctx)
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
-        current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
+        current_song = self.DOWNLOAD_PATH + self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
         print(current_song)
         voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
     
@@ -105,7 +105,7 @@ class MusicManager():
         
         voice_client = ctx.guild.voice_client
         if voice_client.is_playing():
-            current_song = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
+            current_song = self.DOWNLOAD_PATH + self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
             voice_client.source = discord.FFmpegOpusAudio(current_song, codec="copy")
         else:
             loop = asyncio.get_event_loop()
