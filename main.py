@@ -1,4 +1,4 @@
-import sys #Needed to get the arguments
+from os import getenv #Needed to get the arguments
 from discord.ext import commands, tasks #The library for a discord bot (along with tasks to schedule loops)
 #Imports functions from the other files on this project
 from database import getFact, addFact, saveRoles, restoreRoles
@@ -10,7 +10,7 @@ from datetime import datetime, timedelta #Needed for scheduling
 import asyncio #Also needed for scheduling
 
 bot = commands.Bot(command_prefix='.', help_command=None) #Creates the bot object
-token = str(sys.argv[1]) #Gets the bot token from the arguments
+token = getenv("DISCORD_API_KEY") #Gets the bot token from the arguments
 music = MusicManager()
 
 @tasks.loop(hours=24) #Every 24 hours resets pole variables

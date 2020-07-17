@@ -70,15 +70,23 @@ class MusicManager():
 
         if arg.find("playlist") + 1:        #We add 1 because find returns -1 if nothing is found
             playlist_id = arg[arg.find("list=") + 5 : ]
+            playlist = api.get_playlist_by_id(playlist_id=playlist_id)
+            if ctx.guild.voice_client.is_playing():
+                playlist_name = playlist.items[0].snippet.title
+                discord.Embed(
+                    colour=discord.Colour.blue(),
+                    description="Queued [{0}]({1})[{2}]".format(playlist_name, arg, ctx.author.mention)
+                )
+
             pageToken = None
             while True:
-                playlist = api.get_playlist_items(playlist_id= playlist_id, page_token=pageToken)
+                playlist_items = api.get_playlist_items(playlist_id= playlist_id, page_token=pageToken)
                 await asyncio.sleep(0.1)
 
                 for item in playlist.items:
                     song_list.append(item.contentDetails.videoId)
 
-                pageToken = playlist.nextPageToken
+                pageToken = playlist_items.nextPageToken
 
                 if pageToken is None:
                     break
