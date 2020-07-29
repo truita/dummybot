@@ -58,7 +58,7 @@ class MusicManager():
         )
         await ctx.channel.send(embed=msg_embed)
 
-        if ctx.guild.voice_client == None:
+        if ctx.guild.voice_client is None:
             await self.join_channel(ctx)
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
@@ -103,7 +103,7 @@ class MusicManager():
             song_list.append(video_id)  
 
         
-        if ctx.guild.voice_client == None or not ctx.guild.voice_client.is_connected():
+        if ctx.guild.voice_client is None or not ctx.guild.voice_client.is_connected():
             self.__prepare__(ctx)
             self.__queue__(ctx.guild, song_list)
             loop.create_task(self.download(song_list, after=lambda: loop.create_task(self.__do_play__(ctx))))
@@ -115,11 +115,11 @@ class MusicManager():
 
         self.guild_tracks[ctx.guild.id] += 1
 
-        if self.guild_queues[ctx.guild.id] == None:
+        if self.guild_queues[ctx.guild.id] is None:
             return
         
         if len(self.guild_queues[ctx.guild.id]) - 1 < self.guild_tracks[ctx.guild.id]:
-            if self.guild_loop[ctx.guild.id] == True:
+            if self.guild_loop[ctx.guild.id] is True:
                 self.guild_tracks[ctx.guild.id] = 0
             else:
                 await self.leave_channel(ctx)
