@@ -2,7 +2,9 @@ from pytube import YouTube
 import pyyoutube
 from discord.ext import commands
 import discord
-import os, asyncio, random
+import os
+import asyncio
+import random
 
 api = pyyoutube.Api(api_key=os.getenv("YOUTUBE_API_KEY"))
 
@@ -40,7 +42,7 @@ class MusicManager():
         for song_id in url:
             if not os.path.exists("{0}{1}.webm".format(self.DOWNLOAD_PATH, song_id)):
                 print("Downloading {0}".format(song_id))
-                YouTube(url="v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id)
+                YouTube(url="https://youtube.com/watch?v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id)
                 await asyncio.sleep(0.1)
         if after is not None:
             after()
