@@ -9,7 +9,6 @@ import random
 api = pyyoutube.Api(api_key=os.getenv("YOUTUBE_API_KEY"))
 
 class MusicManager():
-    DOWNLOAD_PATH = "/tmp/dummybot/"
     guild_queues = {}
     guild_tracks = {}
     guild_loop = {}
@@ -21,7 +20,7 @@ class MusicManager():
         self.guild_loop[guild.id] = False
 
     async def join_channel(self,ctx:commands.Context):
-        if ctx.author.voice == None:
+        if ctx.author.voice is None:
             await ctx.channel.send("No estás conectado a un canal de voz!")
         else:
             channel = ctx.author.voice.channel
@@ -38,14 +37,6 @@ class MusicManager():
         for song_file in song_id:
             self.guild_queues[guild.id].append(song_file)
     
-    async def download(self,url,*, after=None):
-        for song_id in url:
-            if not os.path.exists("{0}{1}.webm".format(self.DOWNLOAD_PATH, song_id)):
-                print("Downloading {0}".format(song_id))
-                YouTube(url="https://youtube.com/watch?v={0}".format(song_id)).streams.filter(audio_codec="opus", only_audio=True).first().download(output_path=self.DOWNLOAD_PATH,filename=song_id)
-                await asyncio.sleep(0.1)
-        if after is not None:
-            after()
     
     async def __do_play__(self,ctx):
         video_id = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
@@ -60,10 +51,10 @@ class MusicManager():
 
         if ctx.guild.voice_client is None:
             await self.join_channel(ctx)
+
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
-        current_song = self.DOWNLOAD_PATH + self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
-        print(current_song)
+        current_song = YouTube(video_url).streams.filter(audio_codec="opus", only_audio=True).first().url
         voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
     
     async def play(self,ctx:commands.Context, arg:str):
@@ -106,10 +97,9 @@ class MusicManager():
         if ctx.guild.voice_client is None or not ctx.guild.voice_client.is_connected():
             self.__prepare__(ctx)
             self.__queue__(ctx.guild, song_list)
-            loop.create_task(self.download(song_list, after=lambda: loop.create_task(self.__do_play__(ctx))))
+            loop.create_task(self.__do_play__(ctx))
         else:
             self.__queue__(ctx.guild, song_list)
-            loop.create_task(self.download(song_list))
 
     async def next_song(self, ctx):
 
@@ -137,7 +127,7 @@ class MusicManager():
             )
             await ctx.channel.send(embed=msg_embed)
 
-            current_song = self.DOWNLOAD_PATH + self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]] + ".webm"
+            current_song = YouTube(video_url).streams.filter(audio_codec="opus", only_audio=True).first().url
             voice_client.source = discord.FFmpegOpusAudio(current_song, codec="copy")
         else:
             loop = asyncio.get_event_loop()
