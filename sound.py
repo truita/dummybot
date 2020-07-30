@@ -55,7 +55,7 @@ class MusicManager():
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
         current_song = YouTube(video_url).streams.filter(audio_codec="opus", only_audio=True).first().url
-        voice_client.play(discord.FFmpegOpusAudio('"{0}"'.format(current_song), codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
+        voice_client.play(discord.FFmpegOpusAudio(current_song, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
     
     async def play(self,ctx:commands.Context, arg:str):
         loop = asyncio.get_event_loop()
