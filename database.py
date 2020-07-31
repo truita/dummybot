@@ -21,7 +21,8 @@ def getFact(): #Used to get a random fact from the db
 
 def addFact(arg): #Used to save a fact in the db
     connection,cursor = getconnection()
-    cursor.execute("INSERT INTO datos(dato) VALUES('{0}')".format(arg)) #Adds the fact
+    sql = "INSERT INTO datos(dato) VALUES('%s')"
+    cursor.execute(sql, (arg,)) #Adds the fact
     connection.commit() #Commits changes
     closeconnection(connection,cursor)
     return
@@ -38,7 +39,8 @@ def saveRoles(ctx): #Used to save the roles of a member before kicking him
 
 def getRoles(id):
     connection,cursor = getconnection()
-    cursor.execute("SELECT roles FROM savedroles WHERE id='{0}'".format(id)) #Gets the roles from db
+    sql = "SELECT roles FROM savedroles WHERE id='%s'"
+    cursor.execute(sql, (id,)) #Gets the roles from db
     result = cursor.fetchone()[0].decode('utf-8').strip("][").split(', ') #Transform the array representation into an actual array
     closeconnection(connection,cursor)
     return result #Returns the array
