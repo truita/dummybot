@@ -54,8 +54,9 @@ class MusicManager():
 
         voice_client = ctx.guild.voice_client
         loop = asyncio.get_event_loop()
-        current_song = YouTube(video_url).streams.filter(audio_codec="opus", only_audio=True).first().url
-        voice_client.play(discord.FFmpegOpusAudio("cache:{0}".format(current_song), codec="copy", options="-reconnect 1"), after=lambda a: loop.create_task(self.next_song(ctx)))
+        download_path = os.path.abspath("./tmp/")
+        playing_file = YouTube(video_url).streams.filter(audio_codec="opus", only_audio=True).first().download(download_path, filename=ctx.guild.id)
+        voice_client.play(discord.FFmpegOpusAudio(playing_file, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
     
     async def play(self,ctx:commands.Context, arg:str):
         loop = asyncio.get_event_loop()
@@ -127,8 +128,9 @@ class MusicManager():
             )
             await ctx.channel.send(embed=msg_embed)
 
-            current_song = YouTube(video_url).streams.filter(audio_codec="opus", only_audio=True).first().url
-            voice_client.source = discord.FFmpegOpusAudio("cache:{0}".format(current_song), codec="copy", options="-reconnect 1")
+            download_path = os.path.abspath("./tmp/")
+            playing_file = YouTube(video_url).streams.filter(audio_codec="opus", only_audio=True).first().download(download_path, filename=ctx.guild.id)
+            voice_client.source = discord.FFmpegOpusAudio(playing_file, codec="copy", options="-reconnect 1")
         else:
             loop = asyncio.get_event_loop()
             loop.create_task(self.__do_play__(ctx))
