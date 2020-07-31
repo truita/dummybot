@@ -31,6 +31,7 @@ class MusicManager():
         if ctx.author.voice.channel == ctx.guild.voice_client.channel:
             guild = ctx.guild
             voice_client = guild.voice_client
+            os.remove(os.path.abspath("./tmp/{0}.webm").format(guild.id))
             await voice_client.disconnect()
 
     def __queue__(self,guild:discord.guild, song_id):
