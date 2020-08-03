@@ -113,7 +113,7 @@ async def poletime_command(ctx:commands.Context):
 @bot.command(name='satisfactory')
 async def satisfactory_command(ctx:commands.Context):
     now = datetime.now()
-    future = datetime(now.year, now.month, 9, 00, 00)
+    future = datetime(2020, 6, 9, 00, 00)
     await ctx.channel.send('Quedan {0} hasta que salga satisfactory (approx)'.format(future - now))
 
 #All the following functions are further explained in pole.py
