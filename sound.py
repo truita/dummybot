@@ -128,7 +128,7 @@ class Music(commands.Cog):
             queue_elements += f'{idx}) {track.name}'
         
         queue_elements = f'```{queue_elements}```'
-        ctx.send(queue_elements)
+        await ctx.send(queue_elements)
 
     
 def setup(bot):
