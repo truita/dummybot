@@ -118,5 +118,20 @@ class Music(commands.Cog):
 
         await self.connect_to(ctx.guild.id, None)
     
+    @commands.command(aliases=['q'])
+    async def queue(self, ctx):
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+
+        embed = discord.Embed(color=discord.Color.blue())
+
+        queue_elements = ''
+
+        for idx, track in enumerate(player.queue):
+            queue_elements += f'{idx}) {track.name}'
+        
+        embed.description = queue_elements
+        ctx.send(embed=embed)
+
+    
 def setup(bot):
     bot.add_cog(Music(bot))
