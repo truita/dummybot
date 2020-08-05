@@ -7,7 +7,6 @@ import random
 import lavalink
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
-api = pyyoutube.Api(api_key=os.getenv("YOUTUBE_API_KEY"))
 
 class Music(commands.Cog):
     guild_queues = {}
