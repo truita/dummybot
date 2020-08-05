@@ -122,14 +122,12 @@ class Music(commands.Cog):
     async def queue(self, ctx):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
 
-        
+        queue_elements = ''
 
-        queue_elements = '```'
-
-        for idx, track in enumerate(player.queue):
+        for idx, track in enumerate(player.fetch('queue')):
             queue_elements += f'{idx}) {track.name}'
         
-        queue_elements += '```'
+        queue_elements = f'```{queue_elements}```'
         ctx.send(queue_elements)
 
     
