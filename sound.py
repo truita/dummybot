@@ -52,9 +52,9 @@ class Music(commands.Cog):
                 raise commands.CommandInvokeError('Necesito permisos para conectarme y hablar en este canal.')
 
             player.store('channel', ctx.channel.id)
-            await self.connect_to(ctx.guild.id, str(ctx.author.voice.channel))
+            await self.connect_to(ctx.guild.id, str(ctx.author.voice.channel.id))
         else:
-            if int(player.channel.id) != ctx.author.voice.channel.id:
+            if int(player.channel_id) != ctx.author.voice.channel.id:
                 raise commands.CommandInvokeError('Necesitas estar en mi canal de voz.')
 
     async def track_hook(self, event):
@@ -67,7 +67,7 @@ class Music(commands.Cog):
         await ws.voice_state(str(guild_id), channel_id)
 
     @commands.command(aliases=['p'])
-    async def play(self,ctx, *, query: str):
+    async def play(self, ctx, *, query: str):
         player = self.bot.lavalink.player_manager.get(ctx.guild.id)
         query = query.strip('<>')
 
@@ -81,7 +81,7 @@ class Music(commands.Cog):
         
         embed = discord.Embed(color=discord.Color.blue())
 
-        if results['loadtype'] == 'PLAYLIST_LOADED':
+        if results['loadType'] == 'PLAYLIST_LOADED':
             tracks = results['tracks']
 
             for track in tracks:
