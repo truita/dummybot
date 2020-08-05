@@ -1,10 +1,6 @@
 # Original file https://github.com/Devoxin/Lavalink.py/blob/master/examples/music.py
-
-from pytube import YouTube
-import pyyoutube
 from discord.ext import commands
 import discord
-import os
 import re
 import asyncio
 import random
