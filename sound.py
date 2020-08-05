@@ -1,161 +1,122 @@
-from pytube import YouTube
-import pyyoutube
+# Original file https://github.com/Devoxin/Lavalink.py/blob/master/examples/music.py
 from discord.ext import commands
 import discord
-import os
+import re
 import asyncio
 import random
+import lavalink
 
-api = pyyoutube.Api(api_key=os.getenv("YOUTUBE_API_KEY"))
+url_rx = re.compile(r'https?://(?:www\.)?.+')
 
-class MusicManager():
-    guild_queues = {}
-    guild_tracks = {}
-    guild_loop = {}
+class Music(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    def __prepare__(self, ctx):
-        guild = ctx.guild
-        self.guild_queues[guild.id] = []
-        self.guild_tracks[guild.id] = 0
-        self.guild_loop[guild.id] = False
+        if not hasattr(bot, 'lavalink'):
+            bot.lavalink = lavalink.Client(bot.user.id)
+            bot.lavalink.add_node('127.0.0.1', 2333, 'youshallnotpass', 'eu', 'default-node')
+            bot.add_listener(bot.lavalink.voice_update_handler, 'on_socket_response')
+        
+        lavalink.add_event_hook(self.track_hook)
+    
+    def cog_unload(self):
+        self.bot.lavalink._events_hooks.clear()
+    
+    async def cog_before_invoke(self,ctx):
+        guild_check = ctx.guild is not None
 
-    async def join_channel(self,ctx:commands.Context):
-        if ctx.author.voice is None:
-            await ctx.channel.send("No estás conectado a un canal de voz!")
+        if guild_check:
+            await self.ensure_voice(ctx)
+
+        return guild_check
+
+    async def cog_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandInvokeError):
+            await ctx.send(error.original)
+    
+    async def ensure_voice(self, ctx):
+        player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint=str(ctx.guild.region))
+
+        should_connect = ctx.command.name in ('play',)
+
+        if not ctx.author.voice or not ctx.author.voice.channel:
+            raise commands.CommandInvokeError('Únete a un canal de voz primero.')
+
+        if not player.is_connected:
+            if not should_connect:
+                raise commands.CommandInvokeError('No conectado.')
+                
+            permissions = ctx.author.voice.channel.permissions_for(ctx.me)
+
+            if not permissions.connect or not permissions.speak:
+                raise commands.CommandInvokeError('Necesito permisos para conectarme y hablar en este canal.')
+
+            player.store('channel', ctx.channel.id)
+            await self.connect_to(ctx.guild.id, str(ctx.author.voice.channel.id))
         else:
-            channel = ctx.author.voice.channel
-            await channel.connect()
-            
-    
-    async def leave_channel(self,ctx:commands.Context):
-        if ctx.author.voice.channel == ctx.guild.voice_client.channel:
-            guild = ctx.guild
-            voice_client = guild.voice_client
-            os.remove(os.path.abspath("./tmp/{0}.webm").format(guild.id))
-            await voice_client.disconnect()
+            if int(player.channel_id) != ctx.author.voice.channel.id:
+                raise commands.CommandInvokeError('Necesitas estar en mi canal de voz.')
 
-    def __queue__(self,guild:discord.guild, song_id):
-        for song_file in song_id:
-            self.guild_queues[guild.id].append(song_file)
-    
-    
-    async def __do_play__(self,ctx):
-        video_id = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
-        video_url = "https://youtube.com/watch?v={0}".format(video_id)
-        video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
+    async def track_hook(self, event):
+        if isinstance(event, lavalink.events.QueueEndEvent):
+            guild_id = int(event.player.guild_id)
+            await self.connect_to(guild_id, None)
+
+    async def connect_to(self, guild_id: int, channel_id: str):
+        ws = self.bot._connection._get_websocket(guild_id)
+        await ws.voice_state(str(guild_id), channel_id)
+
+    @commands.command(aliases=['p'])
+    async def play(self, ctx, *, query: str):
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
+        query = query.strip('<>')
+
+        if not url_rx.match(query):
+            query = f'ytsearch:{query}'
         
-        download_path = os.path.abspath("./tmp/")
-        playing_file = YouTube(video_url).streams.filter(audio_codec="opus", only_audio=True).first().download(download_path, filename=str(ctx.guild.id))
+        results = await player.node.get_tracks(query)
+
+        if not results or not results['tracks']:
+            return await ctx.send('No hay resultados!')
         
-        msg_embed = discord.Embed(
-            colour=discord.Colour.blue(),
-            title="Now Playing",
-            description="[{0}]({1})[{2}]".format(video_name, video_url, ctx.author.mention)
-        )
-        await ctx.channel.send(embed=msg_embed)
+        embed = discord.Embed(color=discord.Color.blue())
 
-        if ctx.guild.voice_client is None:
-            await self.join_channel(ctx)
+        if results['loadType'] == 'PLAYLIST_LOADED':
+            tracks = results['tracks']
 
-        voice_client = ctx.guild.voice_client
-        loop = asyncio.get_event_loop()
-        
-        voice_client.play(discord.FFmpegOpusAudio(playing_file, codec="copy"), after=lambda a: loop.create_task(self.next_song(ctx)))
-    
-    async def play(self,ctx:commands.Context, arg:str):
-        loop = asyncio.get_event_loop()
-        song_list = []
+            for track in tracks:
+                player.add(requester=ctx.author.id, track=track)
 
-        if arg.find("playlist") + 1:        #We add 1 because find returns -1 if nothing is found
-            playlist_id = arg[arg.find("list=") + 5 : ]
-            playlist = api.get_playlist_by_id(playlist_id=playlist_id)
-            if ctx.guild.voice_client.is_playing():
-                playlist_name = playlist.items[0].snippet.title
-                discord.Embed(
-                    colour=discord.Colour.blue(),
-                    description="Queued [{0}]({1})[{2}]".format(playlist_name, arg, ctx.author.mention)
-                )
-
-            pageToken = None
-            while True:
-                playlist_items = api.get_playlist_items(playlist_id= playlist_id, page_token=pageToken)
-                await asyncio.sleep(0.1)
-
-                for item in playlist.items:
-                    song_list.append(item.contentDetails.videoId)
-
-                pageToken = playlist_items.nextPageToken
-
-                if pageToken is None:
-                    break
-        elif arg.find("watch?v=") + 1:
-            if arg.find("&") + 1: #Removes additional video queries (such as list)
-                arg = arg[:arg.find("&")]
-            video_id = arg[arg.find("watch?v=") + 8 : ]
-            song_list.append(video_id)
+            embed.title = 'Playlist añadida!'
+            embed.description = f'{results["playlistInfo"]["name"]} - {len(tracks)} tracks'
         else:
-            video = api.search(q=arg).items[0]
-            video_id = video.id.videoId
-            song_list.append(video_id)  
+            track = results['tracks'][0]
+            embed.title = 'Canción añadida'
+            embed.description = f'[{track["info"]["title"]}]({track["info"]["uri"]})'
 
+            track = lavalink.models.AudioTrack(track, ctx.author.id, recommended=True)
+            player.add(requester=ctx.author.id, track=track)
         
-        if ctx.guild.voice_client is None or not ctx.guild.voice_client.is_connected():
-            self.__prepare__(ctx)
-            self.__queue__(ctx.guild, song_list)
-            loop.create_task(self.__do_play__(ctx))
-        else:
-            self.__queue__(ctx.guild, song_list)
+        await ctx.send(embed=embed)
 
-    async def next_song(self, ctx):
+        if not player.is_playing:
+            await player.play()
 
-        self.guild_tracks[ctx.guild.id] += 1
+    @commands.command(aliases=['dc'])
+    async def disconnect(self, ctx):
+        player = self.bot.lavalink.player_manager.get(ctx.guild.id)
 
-        if self.guild_queues[ctx.guild.id] is None:
-            return
+        if not player.is_connected:
+            return await ctx.send('No conectado')
         
-        if len(self.guild_queues[ctx.guild.id]) - 1 < self.guild_tracks[ctx.guild.id]:
-            if self.guild_loop[ctx.guild.id] is True:
-                self.guild_tracks[ctx.guild.id] = 0
-            else:
-                await self.leave_channel(ctx)
-                return
-        
-        voice_client = ctx.guild.voice_client
-        if voice_client.is_playing():
-            video_id = self.guild_queues[ctx.guild.id][self.guild_tracks[ctx.guild.id]]
-            video_url = "https://youtube.com/watch?v={0}".format(video_id)
-            video_name = api.get_video_by_id(video_id=video_id).items[0].snippet.title
-            
-            download_path = os.path.abspath("./tmp/")
-            playing_file = YouTube(video_url).streams.filter(audio_codec="opus", only_audio=True).first().download(download_path, filename=str(ctx.guild.id))
+        if not ctx.author.voice or (player.is_connected and ctx.author.voice.channel.id != int(player.channel_id)):
+            return await ctx.send('No estás en mi canal de voz!')
 
-            msg_embed = discord.Embed(
-                colour=discord.Colour.blue(),
-                title="Now Playing",
-                description="[{0}]({1})[{2}]".format(video_name, video_url, ctx.author.mention)
-            )
-            await ctx.channel.send(embed=msg_embed)
+        player.queue.clear()
 
-            voice_client.source = discord.FFmpegOpusAudio(playing_file, codec="copy")
-        else:
-            loop = asyncio.get_event_loop()
-            loop.create_task(self.__do_play__(ctx))
+        await player.stop()
 
-    async def shuffle(self,ctx):
-        random.shuffle(self.guild_queues[ctx.guild.id])
-        await ctx.message.add_reaction("🔀")
-
-    async def loop(self,ctx):
-        self.guild_loop[ctx.guild.id] = True
-        await ctx.message.add_reaction("🔄")
+        await self.connect_to(ctx.guild.id, None)
     
-    async def show_queue(self, ctx):
-        result = "```ml\n"
-        track = 1
-        for item in self.guild_queues[ctx.guild.id]:
-            video_title = api.get_video_by_id(video_id=item).items[0].snippet.title
-            await asyncio.sleep(0.1)
-            result += "{0}) {1}\n".format(track,video_title)
-            track += 1
-        result += "```"
-        await ctx.message.channel.send(result)
+def setup(bot):
+    bot.add_cog(Music(bot))

@@ -4,14 +4,12 @@ from discord.ext import commands, tasks #The library for a discord bot (along wi
 from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
 from pole import pole, subpole, fail, resetpole, ranking
-from sound import MusicManager
-#
+import sound
 from datetime import datetime, timedelta #Needed for scheduling
 import asyncio #Also needed for scheduling
 
 bot = commands.Bot(command_prefix='.', help_command=None) #Creates the bot object
-token = getenv("DISCORD_API_KEY") #Gets the bot token from the arguments
-music = MusicManager()
+token = str(getenv('DISCORD_API_KEY'))
 
 @tasks.loop(hours=24) #Every 24 hours resets pole variables
 async def pole_schedule():
@@ -33,6 +31,7 @@ pole_schedule.start() #Starts the loop
 @bot.event
 async def on_ready(): #Tells you when its ready
     print('We have logged in as {0.user}'.format(bot))
+    sound.setup(bot)
 
 @bot.event
 async def on_member_join(member): #Restores (or tries to) restore the roles of the person who joins
@@ -137,33 +136,5 @@ async def ranking_command(ctx):
 @bot.command(name='google')
 async def google_command(ctx, *, arg1):
     await ctx.channel.send("https://lmgtfy.com/?q={0}".format(arg1.replace(" ", "+")), embed=None)
-
-@bot.command(name='join')
-async def join_command(ctx):
-    await music.join_channel(ctx)
-
-@bot.command(name='leave')
-async def leave_command(ctx):
-    await music.leave_channel(ctx)
-
-@bot.command(name='play')
-async def play_command(ctx, *, args):
-    await music.play(ctx, args)
-
-@bot.command(name='next')
-async def next_command(ctx):
-    await music.next_song(ctx)
-
-@bot.command(name='shuffle')
-async def shuffle_command(ctx):
-    await music.shuffle(ctx)
-
-@bot.command(name='loop')
-async def loop_command(ctx):
-    await music.loop(ctx)
-
-@bot.command(name='queue')
-async def queue_command(ctx):
-    await music.show_queue(ctx)
 
 bot.run(token)
