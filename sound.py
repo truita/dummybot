@@ -9,10 +9,6 @@ import lavalink
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
 class Music(commands.Cog):
-    guild_queues = {}
-    guild_tracks = {}
-    guild_loop = {}
-
     def __init__(self, bot):
         self.bot = bot
 

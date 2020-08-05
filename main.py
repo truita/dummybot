@@ -11,7 +11,6 @@ import asyncio #Also needed for scheduling
 
 bot = commands.Bot(command_prefix='.', help_command=None) #Creates the bot object
 token = str(os.getenv('DISCORD_API_KEY'))
-sound.setup(bot)
 
 @tasks.loop(hours=24) #Every 24 hours resets pole variables
 async def pole_schedule():
@@ -33,6 +32,7 @@ pole_schedule.start() #Starts the loop
 @bot.event
 async def on_ready(): #Tells you when its ready
     print('We have logged in as {0.user}'.format(bot))
+    sound.setup(bot)
 
 @bot.event
 async def on_member_join(member): #Restores (or tries to) restore the roles of the person who joins
