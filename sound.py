@@ -124,7 +124,9 @@ class Music(commands.Cog):
 
         queue_elements = ''
 
-        for idx, track in enumerate(player.fetch('queue')):
+        queue_elements += f'1) {player.current} - {player.position_timestamp} segundos transcurridos'
+
+        for idx, track in enumerate(player.queue, 2):
             queue_elements += f'{idx}) {track.name}'
         
         queue_elements = f'```{queue_elements}```'
