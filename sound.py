@@ -127,7 +127,7 @@ class Music(commands.Cog):
         queue_elements += f'1) {player.current} - {player.position_timestamp} segundos transcurridos'
 
         for idx, track in enumerate(player.queue, 2):
-            queue_elements += f'{idx}) {track.name}'
+            queue_elements += f'{idx}) {track.title}'
         
         queue_elements = f'```{queue_elements}```'
         await ctx.send(queue_elements)
