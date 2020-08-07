@@ -5,12 +5,19 @@ import re
 import asyncio
 import random
 import lavalink
+import os
+import subprocess
+import urllib.request
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
 class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        lavalink_server = os.path.abspath("./lavalink/Lavalink.jar")
+        if not os.path.isfile(lavalink_server):
+            urllib.request.urlretrieve('https://github.com/Cog-Creators/Lavalink-Jars/releases/download/3.3.1_1069/Lavalink.jar', lavalink_server)
+        subprocess.Popen(f'java -jar {lavalink_server}')
 
         if not hasattr(bot, 'lavalink'):
             bot.lavalink = lavalink.Client(bot.user.id)
