@@ -8,6 +8,7 @@ import lavalink
 import os
 import subprocess
 import urllib.request
+import socket
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
@@ -19,6 +20,7 @@ class Music(commands.Cog):
         if not os.path.isfile(lavalink_server):
             urllib.request.urlretrieve('https://github.com/Frederikam/Lavalink/releases/download/3.3.1.1/Lavalink.jar', lavalink_server)
         subprocess.Popen(['java', '-jar', lavalink_server])
+        await wait_for_port(2333)
 
         if not hasattr(bot, 'lavalink'):
             bot.lavalink = lavalink.Client(bot.user.id)
@@ -140,6 +142,13 @@ class Music(commands.Cog):
         queue_elements = f'```{queue_elements}```'
         await ctx.send(queue_elements)
 
-    
+async def wait_for_port(port, host='localhost'):
+    while True:
+        try:
+            with socket.create_connection((host, port)):
+                break
+        except OSError:
+            await asyncio.sleep(0.1)
+
 def setup(bot):
     bot.add_cog(Music(bot))
