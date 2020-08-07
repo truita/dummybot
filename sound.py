@@ -24,7 +24,7 @@ class Music(commands.Cog):
 
         if not hasattr(bot, 'lavalink'):
             bot.lavalink = lavalink.Client(bot.user.id)
-            bot.lavalink.add_node('127.0.0.1', 2333, 'youshallnotpass', 'eu', 'default-node')
+            bot.lavalink.add_node('localhost', 2333, 'youshallnotpass', 'eu', 'default-node')
             bot.add_listener(bot.lavalink.voice_update_handler, 'on_socket_response')
         
         lavalink.add_event_hook(self.track_hook)
@@ -43,8 +43,6 @@ class Music(commands.Cog):
     async def cog_command_error(self, ctx, error):
         if isinstance(error, commands.CommandInvokeError):
             await ctx.send(error.original)
-        else:
-            raise error
     
     async def ensure_voice(self, ctx):
         player = self.bot.lavalink.player_manager.create(ctx.guild.id, endpoint=str(ctx.guild.region))
