@@ -20,7 +20,7 @@ class Music(commands.Cog):
         if not os.path.isfile(lavalink_server):
             urllib.request.urlretrieve('https://github.com/Frederikam/Lavalink/releases/download/3.3.1.1/Lavalink.jar', lavalink_server)
         subprocess.Popen(['java', '-jar', lavalink_server])
-        await wait_for_port(2333)
+        asyncio.run(wait_for_port(2333))
 
         if not hasattr(bot, 'lavalink'):
             bot.lavalink = lavalink.Client(bot.user.id)
