@@ -1,37 +1,20 @@
 from os import getenv #Needed to get the arguments
 from discord.ext import commands, tasks #The library for a discord bot (along with tasks to schedule loops)
 #Imports functions from the other files on this project
-from database import getFact, addFact, saveRoles, restoreRoles
 from russian_roulette import reload_function, pew_function
-from pole import pole, subpole, fail, resetpole, ranking
-import sound
 from datetime import datetime, timedelta #Needed for scheduling
-import asyncio #Also needed for scheduling
+import music
+import flags
 
 bot = commands.Bot(command_prefix='.', help_command=None) #Creates the bot object
 token = str(getenv('DISCORD_API_KEY'))
 
-@tasks.loop(hours=24) #Every 24 hours resets pole variables
-async def pole_schedule():
-    resetpole()
-
-@pole_schedule.before_loop #Calculates time until 00:00 and waits that time for the pole_schedule loop to run exactly at 00:00 every day
-async def before_pole_schedule():
-    hour = 00 
-    minute = 00
-    await bot.wait_until_ready()
-    now = datetime.now()
-    future = datetime(now.year, now.month, now.day, hour, minute)
-    if now.hour >= hour and now.minute > minute:
-        future += timedelta(days=1)
-    await asyncio.sleep((future - now).total_seconds())
-
-pole_schedule.start() #Starts the loop
 
 @bot.event
 async def on_ready(): #Tells you when its ready
     print('We have logged in as {0.user}'.format(bot))
-    sound.setup(bot)
+    flags.setup(bot)
+    music.setup(bot)
 
 @bot.event
 async def on_member_join(member): #Restores (or tries to) restore the roles of the person who joins
@@ -114,24 +97,6 @@ async def satisfactory_command(ctx:commands.Context):
     now = datetime.now()
     future = datetime(2020, 6, 9, 00, 00)
     await ctx.channel.send('Quedan {0} hasta que salga satisfactory (approx)'.format(future - now))
-
-#All the following functions are further explained in pole.py
-@bot.command(name='pole', aliases=['Pole'])
-async def pole_command(ctx):
-    await pole(ctx)
-
-@bot.command(name='subpole', aliases=['Subpole'])
-async def subpole_command(ctx):
-    await subpole(ctx)
-
-@bot.command(name='fail', aliases=['Fail'])
-async def fail_command(ctx):
-    await fail(ctx)
-
-@bot.command(name='ranking')
-async def ranking_command(ctx):
-    await ranking(ctx)
-
 
 @bot.command(name='google')
 async def google_command(ctx, *, arg1):

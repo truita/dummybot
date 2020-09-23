@@ -8,7 +8,6 @@ import lavalink
 import os
 import subprocess
 import urllib.request
-import socket
 
 url_rx = re.compile(r'https?://(?:www\.)?.+')
 
@@ -16,22 +15,23 @@ class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         dirname = os.path.dirname(__file__)
-        lavalink_server = os.path.join(dirname, 'lavalink/Lavalink.jar')
+        lavalink_folder = os.path.join(dirname, 'lavalink')
+        lavalink_server = os.path.join(lavalink_folder, 'Lavalink.jar')
         if not os.path.isfile(lavalink_server):
             urllib.request.urlretrieve('https://github.com/Frederikam/Lavalink/releases/download/3.3.1.1/Lavalink.jar', lavalink_server)
-        subprocess.Popen(['java', '-jar', lavalink_server])
-
+        process = subprocess.Popen(['java', '-jar', lavalink_server], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=lavalink_folder)
+        
         if not hasattr(bot, 'lavalink'):
             bot.lavalink = lavalink.Client(bot.user.id)
-            bot.lavalink.add_node('localhost', 2333, 'youshallnotpass', 'eu', 'default-node', reconnect_attempts=-1)
+            bot.lavalink.add_node('127.0.0.1', 2333, 'youshallnotpass', 'eu', 'default-node', reconnect_attempts=-1)
             bot.add_listener(bot.lavalink.voice_update_handler, 'on_socket_response')
         
         lavalink.add_event_hook(self.track_hook)
     
     def cog_unload(self):
-        self.bot.lavalink._events_hooks.clear()
+        self.bot.lavalink._event_hooks.clear()
     
-    async def cog_before_invoke(self,ctx):
+    async def cog_before_invoke(self, ctx):
         guild_check = ctx.guild is not None
 
         if guild_check:
