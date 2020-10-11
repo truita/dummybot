@@ -19,7 +19,7 @@ class Music(commands.Cog):
         lavalink_server = os.path.join(lavalink_folder, 'Lavalink.jar')
         if not os.path.isfile(lavalink_server):
             urllib.request.urlretrieve('https://github.com/Frederikam/Lavalink/releases/download/3.3.1.1/Lavalink.jar', lavalink_server)
-        process = subprocess.Popen(['java', '-jar', lavalink_server], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=lavalink_folder)
+        subprocess.Popen(['java', '-jar', lavalink_server], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=lavalink_folder)
         
         if not hasattr(bot, 'lavalink'):
             bot.lavalink = lavalink.Client(bot.user.id)

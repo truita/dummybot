@@ -1,7 +1,8 @@
 from os import getenv #Needed to get the arguments
 from discord.ext import commands, tasks #The library for a discord bot (along with tasks to schedule loops)
 #Imports functions from the other files on this project
-from russian_roulette import reload_function, pew_function
+
+import russian_roulette
 from datetime import datetime, timedelta #Needed for scheduling
 import music
 import flags
@@ -15,6 +16,7 @@ async def on_ready(): #Tells you when its ready
     print('We have logged in as {0.user}'.format(bot))
     flags.setup(bot)
     music.setup(bot)
+    russian_roulette.setup(bot)
 
 @bot.event
 async def on_member_join(member): #Restores (or tries to) restore the roles of the person who joins
@@ -51,27 +53,6 @@ async def datoadd_command(ctx, *, arg1):
         await ctx.channel.send('Ha ocurrido un error al añadir tu dato') #If something goes wrong it will throw an error
 
 
-@bot.command(name='reload')
-async def reload_command(ctx): #Reloads the magazine
-    reload_function()
-    await ctx.channel.send('clac clac')
-
-
-@bot.command(name='pew')
-async def pew_command(ctx):
-    pew_result = pew_function()
-    if pew_result == 2: # 2 = no bullets
-        await ctx.channel.send('Recarga antes de disparar!')
-    elif pew_result == 1: # 1 = bullet hit
-        saveRoles(ctx)
-        await ctx.channel.send('**PEW**')
-        await ctx.message.author.send(await ctx.channel.create_invite(max_uses=1))
-        try:
-            await ctx.message.author.kick()
-        except:
-            await ctx.channel.send('No tengo permisos suficientes!')
-    else: # 0 = bullets in magazine, but didn't hit
-        await ctx.channel.send('*click*')
 
 
 @bot.command(name='suicide')
