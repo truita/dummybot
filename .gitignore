@@ -1,3 +1,6 @@
-.vscode/
 __pycache__/
-dummybot.code-workspace
+db/*
+lavalink/logs
+lavalink/Lavalink.jar
+dummybot.sublime-project
+dummybot.sublime-workspace
