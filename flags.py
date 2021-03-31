@@ -32,11 +32,11 @@ class Flags(commands.Cog):
         if guild in self.readyflags:
             guild_flags = self.readyflags[guild]
             if guild_flags.flags[flagtype] != True:
-                return (False, guild_flags.makers[flagtype])
+                return (False, (False, None))
             elif maker in (guild_flags.makers[:flagtype] + guild_flags.makers[flagtype:]):
-                return (False, (True, guild_flags.index(maker)))
+                return (False, (True, guild_flags.makers.index(maker)))
             else:
-                return (True, None)
+                return (True, (False, None))
 
         else:
             self.readyflags[guild] = self.FlagChecks()
@@ -108,11 +108,11 @@ class Flags(commands.Cog):
                 "INSERT INTO FLAGS(ID,POINTS,SUBPOLE) VALUES(?,2,1) ON CONFLICT(ID) DO UPDATE SET POINTS = POINTS + 2, SUBPOLE = SUBPOLE + 1", (ctx.author.id,))
             guild_flags.flags[1] = False
             guild_flags.makers[1] = ctx.author.id
-            await ctx.send(f'{ctx.author.mention} ha hecho la pole!')
+            await ctx.send(f'{ctx.author.mention} ha hecho la subpole!')
         elif flag_info[1][0] == True:
             await ctx.send(f'{ctx.author.mention} ya has hecho .{self.flag_number_to_string[flag_info[1][1]]}')
         elif flag_info[0] == False:
-            await ctx.send(f'<@{guild_flags.makers[1]}> ya ha hecho la pole')
+            await ctx.send(f'<@{guild_flags.makers[1]}> ya ha hecho la subpole')
 
     @commands.command()
     async def fail(self, ctx):
@@ -124,11 +124,11 @@ class Flags(commands.Cog):
                 "INSERT INTO FLAGS(ID,POINTS,FAIL) VALUES(?,1,1) ON CONFLICT(ID) DO UPDATE SET POINTS = POINTS + 1, FAIL = FAIL + 1", (ctx.author.id,))
             guild_flags.flags[2] = False
             guild_flags.makers[2] = ctx.author.id
-            await ctx.send(f'{ctx.author.mention} ha hecho la pole!')
+            await ctx.send(f'{ctx.author.mention} ha hecho el fail!')
         elif flag_info[1][0] == True:
             await ctx.send(f'{ctx.author.mention} ya has hecho .{self.flag_number_to_string[flag_info[1][1]]}')
         elif flag_info[0] == False:
-            await ctx.send(f'<@{guild_flags.makers[2]}> ya ha hecho la pole')
+            await ctx.send(f'<@{guild_flags.makers[2]}> ya ha hecho el fail')
 
     @commands.command()
     async def ranking(self, ctx):
